@@ -44,8 +44,8 @@ export default {
     '@nuxtjs/strapi'
   ],
   strapi: {
-    url: 'http://localhost:3001',
-    //  url: 'https://iadminstrapi.herokuapp.com',
+    //url: 'http://localhost:3001',
+    url: 'https://iadminstrapi.herokuapp.com',
     entities: [
       'logs',
       'accounts',
