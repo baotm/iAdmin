@@ -23,7 +23,7 @@
           id="card-view"
         >
           <div
-            class="col-md-3"
+            class="col-md-4"
             v-for="user in listUser"
             :key="user.account_id"
           >
@@ -40,7 +40,8 @@
                     >
                   </div>
                   <h4 class="m-t-30 text-capitalize">{{user.name}}</h4>
-                  <p class="font-weight-bold badge badge-primary text-wrap">{{user.role}}</p>
+                  <p class="makeOnline"><span class="badge badge-success">Online</span></p>
+                  <p class="font-weight-bold badge badge-primary text-wrap ">{{user.role}}</p>
                   <p>{{user.email}}</p>
                   <p>{{user.phone}}</p>
                 </div>
@@ -82,11 +83,19 @@ export default {
     }
   },
   async fetch () {
-    this.listUser = await this.$strapi.$listuseronlines.findOne('5fb78ee760333a35c00fd368')
-    this.listUser = this.listUser.list;
+    this.listUser = await this.$strapi.$listuseronlines.find()
   }
 }
 </script>
 
-<style>
+<style scoped>
+.makeOnline {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
 </style>

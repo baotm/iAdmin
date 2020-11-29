@@ -12,7 +12,13 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
     ,
+    // script: [
+    //  
+    //]
     script: [
+      {
+        src: '/js/jquery.min.js',
+      },
       {
         src: '/js/vendors.min.js',
       }
@@ -44,8 +50,8 @@ export default {
     '@nuxtjs/strapi'
   ],
   strapi: {
-    //url: 'http://localhost:3001',
-    url: 'https://iadminstrapi.herokuapp.com',
+    url: 'http://localhost:3001',
+    // url: 'https://iadminstrapi.herokuapp.com',
     entities: [
       'logs',
       'accounts',
@@ -58,12 +64,14 @@ export default {
       'taisancams',
       'thuoctinhmondos',
       'trackings',
-      'listuseronlines'
+      'listuseronlines',
+      'socaitienmats',
+      'chungtus',
 
     ]
   },
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
 
-  }
+  },
 }

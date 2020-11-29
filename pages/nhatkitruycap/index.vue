@@ -130,6 +130,7 @@ export default {
     }
   },
   async fetch () {
+
     this.logs = await this.$strapi.$nhatkitruycaps.find();
     this.totalItems = this.logs.length
     this.isBusy = false

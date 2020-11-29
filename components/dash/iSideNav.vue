@@ -16,7 +16,7 @@
             href="javascript:void(0);"
           >
             <span class="icon-holder">
-              <i class="anticon anticon-pie-chart"></i>
+              <i class="anticon anticon-setting"></i>
             </span>
             <span class="title">Hợp Đồng</span>
             <span class="arrow">
@@ -24,6 +24,11 @@
             </span>
           </a>
           <ul class="dropdown-menu">
+            <li>
+
+              <nuxt-link to="/hopdong">Hợp Đồng</nuxt-link>
+
+            </li>
             <li>
 
               <nuxt-link to="/hopdong/new">Thêm Hợp Đồng</nuxt-link>
@@ -42,7 +47,7 @@
             href="javascript:void(0);"
           >
             <span class="icon-holder">
-              <i class="anticon anticon-pie-chart"></i>
+              <i class="anticon anticon-book"></i>
             </span>
             <span class="title">Cấu Hình</span>
             <span class="arrow">
@@ -51,30 +56,16 @@
           </a>
           <ul class="dropdown-menu">
             <li>
-
-              <nuxt-link to="/auth/">Thêm Hợp Đồng</nuxt-link>
-
+              <nuxt-link to="#">Cấu Hình Tiệm</nuxt-link>
             </li>
             <li>
-              <a href="">Dropdown 2</a>
+              <nuxt-link to="#">Cấu Hình Kho</nuxt-link>
             </li>
             <li>
-              <a href="">Dropdown 2</a>
+              <nuxt-link to="#">Cấu Hình Tài Sản</nuxt-link>
             </li>
             <li>
-              <a href="">Dropdown 2</a>
-            </li>
-            <li>
-              <a href="">Dropdown 2</a>
-            </li>
-            <li>
-              <a href="">Dropdown 2</a>
-            </li>
-            <li>
-              <a href="">Dropdown 2</a>
-            </li>
-            <li>
-              <a href="">Dropdown 2</a>
+              <nuxt-link to="#">Cấu Hình Truy Cập</nuxt-link>
             </li>
           </ul>
         </li>
@@ -83,10 +74,31 @@
             class="dropdown-toggle"
             href="javascript:void(0);"
           >
-            <span class="icon-holder">
-              <i class="anticon anticon-pie-chart"></i>
+            <span class="icon-holder"><i class="anticon anticon-user"></i>
             </span>
-            <span class="title">Nhật kí</span>
+            <span class="title">Tài Khoản</span>
+            <span class="arrow">
+              <i class="arrow-icon"></i>
+            </span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <nuxt-link to="/nhatkitruycap/">Tài Khoản</nuxt-link>
+            </li>
+            <li>
+              <nuxt-link to="/nhatkitruycap/online">Tạo User</nuxt-link>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a
+            class="dropdown-toggle"
+            href="javascript:void(0);"
+          >
+            <span class="icon-holder"><i class="anticon anticon-rest"></i>
+            </span>
+            <span class="title">Thanh Lý</span>
             <span class="arrow">
               <i class="arrow-icon"></i>
             </span>
@@ -104,6 +116,32 @@
             </li>
           </ul>
         </li>
+        <li class="nav-item dropdown">
+          <a
+            class="dropdown-toggle"
+            href="javascript:void(0);"
+          >
+            <span class="icon-holder"><i class="anticon anticon-fund"></i>
+            </span>
+            <span class="title">Thống Kê</span>
+            <span class="arrow">
+              <i class="arrow-icon"></i>
+            </span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+
+              <nuxt-link to="/nhatkitruycap/">Nhật Kí Truy Cập</nuxt-link>
+
+            </li>
+            <li>
+
+              <nuxt-link to="/nhatkitruycap/online">User Online</nuxt-link>
+
+            </li>
+          </ul>
+        </li>
+
       </ul>
     </div>
   </div>
@@ -116,7 +154,7 @@ export default {
 
   },
   mounted () {
-    $('.scrollable').perfectScrollbar();
+    //   $('.scrollable').perfectScrollbar();
     $('.side-nav .side-nav-menu li ul li').on('click', (e) => {
       const $this = $(e.currentTarget);
       $('.side-nav .side-nav-menu li ul li').removeClass('active')

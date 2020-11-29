@@ -21,12 +21,18 @@ import myHeader from '../components/dash/iHeader'
 import myFooter from '../components/dash/iFooter'
 import mySideNav from '../components/dash/iSideNav'
 import pageHeader from '../components/dash/pageHeader'
-import PageHeader from '~/components/dash/pageHeader.vue'
+
 export default {
+
   data () {
     return {
 
     }
+  },
+  async created () {
+    //login to strapi
+    await this.$strapi.login({ identifier: 'bao@gmail.com', password: 'demo' })
+
   },
   watch: {
 

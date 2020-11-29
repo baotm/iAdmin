@@ -82,7 +82,7 @@
           </div>
         </div>
         <div class="d-none d-md-flex p-h-40 justify-content-between">
-          <span class="">© 2019 ThemeNate</span>
+          <span class="">© 2020❤️Nacy</span>
           <ul class="list-inline">
             <li class="list-inline-item">
               <a
@@ -117,11 +117,15 @@ export default {
       show: false
     }
   },
+  beforeMount () {
 
+  },
   created () {
-    if (this.$cookies.get('login') && this.$route.fullPath == "/login/") {
-      location.replace('/')
+    if (this.$cookies.get('login')) {
+      this.$router.push('/')
     }
+
+
   },
   methods: {
 
@@ -139,19 +143,19 @@ export default {
         this.show = false;
         return;
       }
-      let a = await this.$strapi.$accounts.count({
+
+      //check listlogin
+
+      let info = await this.$strapi.$accounts.find({
         username: this.username,
         password: this.password
       })
-
-      if (a > 0) {
-
+      if (info.length > 0) {
         //login to strapi
-        let info = await this.$strapi.$accounts.find({
-          username: this.username
-        })
         //login true
         //let my ip
+        //check is login
+
 
         let uri = 'https://api.ipify.org'
         let myip = await fetch(uri);
@@ -162,12 +166,17 @@ export default {
           ip: ip,
           accounts: info[0]
         }
-        await this.$strapi.$nhatkitruycaps.create(d)
+        //  await this.$strapi.$nhatkitruycaps.create(d)
         //set cookies here
-        this.$cookies.set('login', true)
-        this.$cookies.set('info', info[0])
+        let optionCookies = {
+          path: '/',
+          expires: 0
+        }
+        this.$cookies.set('login', true, optionCookies)
+        this.$cookies.set('info', info[0], optionCookies)
+
         //set user online
-        let oldList = await this.$strapi.$listuseronlines.findOne("5fb78ee760333a35c00fd368");
+
         let acc = {
           "name": info[0].RealName,
           "role": info[0].Role,
@@ -176,11 +185,13 @@ export default {
           "phone": info[0].Phone,
           "account_id": info[0]._id
         }
-        let newList = oldList.list;
-        newList.push(acc)
-        await this.$strapi.$listuseronlines.update("5fb78ee760333a35c00fd368", {
-          list: newList
-        })
+
+        //  let loginSession = await this.$strapi.$listuseronlines.create(acc)
+        let [nktc, LoginSession] = await Promise.all([
+          this.$strapi.$nhatkitruycaps.create(d),
+          this.$strapi.$listuseronlines.create(acc)
+        ])
+        this.$cookies.set('loginSession', LoginSession._id, optionCookies)
         location.replace('/')
       } else {
         //login false

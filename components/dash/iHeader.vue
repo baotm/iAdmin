@@ -119,7 +119,7 @@
           >
             <div class="avatar avatar-image  m-h-10 m-r-15">
               <img
-                :src="info.Avatar.url"
+                :src="info.Avatar.formats.thumbnail.url"
                 alt=""
               >
             </div>
@@ -129,7 +129,7 @@
               <div class="d-flex m-r-50">
                 <div class="avatar avatar-lg avatar-image">
                   <img
-                    :src="info.Avatar.url"
+                    :src="info.Avatar.formats.thumbnail.url"
                     alt=""
                   >
                 </div>
@@ -169,11 +169,7 @@
         </li>
 
         <li>
-          <a
-            href="javascript:void(0);"
-            data-toggle="modal"
-            data-target="#quick-view"
-          >
+          <a href="javascript:void(0);">
             <i class="anticon anticon-appstore"></i>
           </a>
         </li>
@@ -188,22 +184,28 @@
 </template>
 
 <script>
-
 export default {
   data () {
     return {
       info: {},
-      show: false
+      show: false,
+      fullSreen: false,
+      clogout: false
     }
+  },
+  beforeMount () {
+
   },
   created () {
     this.info = this.$cookies.get('info');
+
   },
   methods: {
     goBack () {
       this.$router.go(-1)
     },
     async logout () {
+
       this.show = true;
       this.$cookies.remove('info');
       this.$cookies.remove('login');
@@ -217,19 +219,15 @@ export default {
         ip: ip,
         accounts: this.info._id
       }
-      await this.$strapi.$nhatkitruycaps.create(d)
-      //remove in userlistonline
-
-      let oldList = await this.$strapi.$listuseronlines.findOne("5fb78ee760333a35c00fd368");
-      let newList = oldList.list;
-      let accID = this.info._id;
-      let result = newList.filter(list => {
-        return list.account_id !== accID
-      })
-      await this.$strapi.$listuseronlines.update("5fb78ee760333a35c00fd368", {
-        list: result
-      })
+      //  await this.$strapi.$nhatkitruycaps.create(d)
+      let loginSession = this.$cookies.get('loginSession')
+      //    await this.$strapi.$listuseronlines.delete(loginSession);
       this.show = false;
+      await Promise.all([
+        await this.$strapi.$nhatkitruycaps.create(d),
+        await this.$strapi.$listuseronlines.delete(loginSession)
+      ])
+      this.logout = true;
       location.replace('/')
     },
     onClickMenuDesk () {
