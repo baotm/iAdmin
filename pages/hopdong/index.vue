@@ -1,129 +1,212 @@
 <template>
   <div class="card">
-    <div class="card-body">
-      <div class="d-flex align-items-center justify-content-between m-b-15">
-        <h4 class="m-b-0">Toàn bộ hợp đồng</h4>
-        <div class="card-toolbar">
+    <b-overlay :show="showPage">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between m-b-15">
+          <h4 class="m-b-0">Toàn bộ hợp đồng</h4>
+          <div class="card-toolbar">
 
-          <ul>
-            <li>
-              <a
-                class="text-gray"
-                href="javascript:void(0)"
-              >
-                <i class="anticon anticon-reload font-size-20"></i>
-              </a>
-            </li>
-
-            <li>
-
-              <div class="dropdown dropdown-animated scale-left">
-
+            <ul>
+              <li>
                 <a
                   class="text-gray"
                   href="javascript:void(0)"
-                  data-toggle="dropdown"
                 >
-                  <i class="anticon anticon-ellipsis font-size-20"></i>
+                  <i
+                    class="anticon anticon-reload font-size-20"
+                    v-on:click="refeshPage"
+                  ></i>
                 </a>
+              </li>
 
-                <div class="dropdown-menu">
-                  <button
-                    class="dropdown-item"
-                    type="button"
-                  >Kiểu tóm tắt</button>
-                  <button
-                    class="dropdown-item"
-                    type="button"
-                  >Kiểu Đầy đủ </button>
+              <li>
+
+                <div class="dropdown dropdown-animated scale-left">
+
+                  <a
+                    class="text-gray"
+                    href="javascript:void(0)"
+                    data-toggle="dropdown"
+                  >
+                    <i class="anticon anticon-ellipsis font-size-20"></i>
+                  </a>
+
+                  <div class="dropdown-menu">
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                    >Kiểu tóm tắt</button>
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                    >Kiểu Đầy đủ </button>
+                  </div>
                 </div>
-              </div>
 
-            </li>
-          </ul>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-      <div class="m-t-25">
-        <b-row>
-          <b-col
-            class="my-1"
-            lg="6"
-          >
-            <b-form-group label="Tìm Kiếm Theo Tên">
-              <b-input-group>
-                <b-form-input
-                  type="search"
-                  id="filterInput"
-                  placeholder="Type to Search"
-                  v-model="filter"
-                  autocomplete="off"
-                ></b-form-input>
-                <b-input-group-append>
-                  <b-button>Clear</b-button>
-                </b-input-group-append>
-              </b-input-group>
-            </b-form-group>
-          </b-col>
-          <b-col lg="6">
-            <b-form-group
-              label="Tìm trong"
-              description="Bỏ trống sẽ kích hoạt tìm tất cả các thông tin"
-              class="mb-0"
+        <div class="m-t-25">
+          <b-row>
+            <b-col
+              class="my-1"
+              lg="6"
             >
-              <b-form-checkbox-group
-                v-model="filterOn"
-                class="mt-1"
+              <b-form-group label="Tìm Kiếm Theo Tên">
+                <b-input-group>
+                  <b-form-input
+                    type="search"
+                    id="filterInput"
+                    placeholder="Type to Search"
+                    v-model="filter"
+                    autocomplete="off"
+                  ></b-form-input>
+                  <b-input-group-append>
+                    <b-button>Clear</b-button>
+                  </b-input-group-append>
+                </b-input-group>
+              </b-form-group>
+            </b-col>
+            <b-col lg="6">
+              <b-form-group
+                label="Tìm trong"
+                description="Bỏ trống sẽ kích hoạt tìm tất cả các thông tin"
+                class="mb-0"
               >
-                <b-form-checkbox value="Account">Tên</b-form-checkbox>
-                <b-form-checkbox value="Type">Kiểu Truy Cập</b-form-checkbox>
-                <b-form-checkbox value="I">Địa Chỉ IP</b-form-checkbox>
-              </b-form-checkbox-group>
-            </b-form-group>
-          </b-col>
-        </b-row>
+                <b-form-checkbox-group
+                  v-model="filterOn"
+                  class="mt-1"
+                >
+                  <b-form-checkbox value="Account">Tên</b-form-checkbox>
+                  <b-form-checkbox value="Type">Kiểu Truy Cập</b-form-checkbox>
+                  <b-form-checkbox value="I">Địa Chỉ IP</b-form-checkbox>
+                </b-form-checkbox-group>
+              </b-form-group>
+            </b-col>
+          </b-row>
 
-        <b-table
-          show-empty
-          :fields="fields"
-          borderless
-          outlined
-          fixed
-          table-variant
-          hover
-          :items="hopdongs"
-          :per-page="perPage"
-          :current-page="currentPage"
-          :busy="isBusy"
-        >
-          <template #table-busy>
-            <div class="text-center text-danger my-2">
-              <b-spinner class="align-middle"></b-spinner>
-              <strong>Lấy dữ liệu...</strong>
-            </div>
-          </template>
+          <b-table
+            show-empty
+            :fields="fields"
+            borderless
+            outlined
+            fixed
+            table-variant
+            hover
+            :items="hopdongs"
+            :per-page="perPage"
+            :current-page="currentPage"
+            :busy="isBusy"
+            style="cursor: pointer"
+          >
+            <template #table-busy>
+              <div class="text-center text-danger my-2">
+                <b-spinner class="align-middle"></b-spinner>
+                <strong>Lấy dữ liệu...</strong>
+              </div>
+            </template>
 
-          <template #cell(stt)="data">
-            {{ data.index + 1 }}
-          </template>
+            <template #cell(stt)="data">
 
-          <template #cell(maso)="data">
+              <nuxt-link :to="{ path: '/hopdong/'+data.item._id}">
+                {{ data.index + 1 }}
+              </nuxt-link>
 
-            <nuxt-link :to="{ path: '/hopdong/'+data.item._id}">
-              {{data.item.maso}}
-            </nuxt-link>
+            </template>
 
-          </template>
+            <template #cell(sotien)="data">
+              {{ formatNumber(data.item.sotien) }}
+            </template>
+            <template #cell(loaitaisan)="data">
 
-        </b-table>
-        <b-pagination
-          :total-rows="totalItems"
-          v-model="currentPage"
-          :per-page="perPage"
-          align="right"
-        ></b-pagination>
+              <span v-if="data.item.loaitaisan==='VANG'">
+                <div
+                  class="badge badge-pill badge-warning text-wrap text-center"
+                  style="width: 6rem;"
+                >
+                  {{data.item.loaitaisan}}
+                </div>
+              </span>
+              <span v-else-if="data.item.loaitaisan==='XE'">
+
+                <div
+                  class="badge badge-pill badge-info text-wrap text-center"
+                  style="width: 6rem;"
+                >
+                  {{data.item.loaitaisan}}
+                </div>
+
+              </span>
+
+              <span v-else-if="data.item.loaitaisan==='DIENTHOAI'">
+
+                <div
+                  class="badge badge-pill badge-success text-wrap text-center"
+                  style="width: 6rem;"
+                >
+                  {{data.item.loaitaisan}}
+                </div>
+
+              </span>
+
+              <span v-else>
+
+                <div
+                  class="badge badge-pill badge-primary text-wrap text-center"
+                  style="width: 6rem;"
+                >
+                  {{data.item.loaitaisan}}
+                </div>
+              </span>
+
+            </template>
+
+            <template #cell(ngaythe)="data">
+              {{ formatDay(data.item.ngaythe)}}
+            </template>
+            <template #cell(maso)="data">
+
+              <nuxt-link :to="{ path: '/hopdong/'+data.item._id}">
+                {{data.item.maso}}
+              </nuxt-link>
+
+            </template>
+            <template #cell(tienno)="data">
+
+              {{formatNumber(data.item.tienno)}}
+
+            </template>
+            <template #cell(tinhtrang)="data">
+              <span v-if="data.item.tinhtrang==='CHUACHUOC'">
+                <div
+                  class="badge badge-pill badge-info text-wrap text-center blink_me"
+                  style="width: 6rem;"
+                >
+                  {{data.item.tinhtrang}}
+                </div>
+              </span>
+              <span v-else>
+                <div
+                  class="badge badge-pill badge-success text-wrap text-center blink_me"
+                  style="width: 6rem;"
+                >
+                  {{data.item.tinhtrang}}
+                </div>
+              </span>
+
+            </template>
+          </b-table>
+          <b-pagination
+            :total-rows="totalItems"
+            v-model="currentPage"
+            :per-page="perPage"
+            align="right"
+          ></b-pagination>
+        </div>
+
       </div>
-
-    </div>
+    </b-overlay>
   </div>
 </template>
 
@@ -131,6 +214,7 @@
 export default {
   data () {
     return {
+      showPage: false,
       isBusy: true,
       //filter
       filter: null,
@@ -147,6 +231,8 @@ export default {
         { key: 'tinhtrang', label: 'T/T', sortable: true },
         { key: 'ngaythe', label: 'Ngày Thế', sortable: true },
         { key: 'maso', label: 'Mã', sortable: true },
+        { key: 'tienno', label: 'Tiền Nợ', sortable: true },
+
 
       ],
       hopdongs: []
@@ -158,9 +244,31 @@ export default {
     this.isBusy = false
   },
   methods: {
+    formatDay (x) {
+      return this.$moment(x).format('DD-MM-YYYY')
+    },
+    formatNumber (x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    refeshPage () {
+      this.showPage = true
+      window.location.reload();
+    }
+  },
+  computed: {
+
   }
 }
 </script>
 
-<style>
+<style scoped>
+.blink_me {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
 </style>

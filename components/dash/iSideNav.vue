@@ -104,7 +104,7 @@
               <nuxt-link to="/thongbao/dadoc">Đã đọc</nuxt-link>
             </li>
             <li>
-              <nuxt-link to="/thongbao/">Tất cả</nuxt-link>
+              <nuxt-link to="/thongbao/tatca">Tất cả</nuxt-link>
             </li>
           </ul>
         </li>

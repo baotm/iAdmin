@@ -85,7 +85,7 @@
             <div class="relative">
               <div
                 class="overflow-y-auto relative scrollable "
-                style="max-height: 300px"
+                style="max-height: 400px"
               >
                 <nuxt-link
                   to="/thongbao/moi"
@@ -136,7 +136,40 @@
                     </div>
                   </div>
                 </nuxt-link>
+                <nuxt-link
+                  to="/thongbao/sua"
+                  class="dropdown-item d-block p-15 border-bottom"
+                >
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-cyan avatar-icon avatar-badge avatar-square ">
 
+                      <i class="anticon anticon-form"></i>
+                      <span class="badge badge-indicator badge-danger">{{getCountSuaHopDong}}</span>
+                    </div>
+
+                    <div class="m-l-15">
+                      <p class="m-b-0 text-dark">Sửa Hợp Đồng</p>
+
+                    </div>
+                  </div>
+                </nuxt-link>
+                <nuxt-link
+                  to="/thongbao/xoa"
+                  class="dropdown-item d-block p-15 border-bottom"
+                >
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-cyan avatar-icon avatar-badge avatar-square ">
+
+                      <i class="anticon anticon-delete"></i>
+                      <span class="badge badge-indicator badge-danger">{{getCountXoaHopDong}}</span>
+                    </div>
+
+                    <div class="m-l-15">
+                      <p class="m-b-0 text-dark">Xoá Hợp Đồng</p>
+
+                    </div>
+                  </div>
+                </nuxt-link>
               </div>
             </div>
           </div>
@@ -249,6 +282,26 @@ export default {
 
       this.noti.map(item => {
         if (item.ten === "HOPDONGMOI") {
+          count += 1;
+        }
+      })
+      return count;
+    },
+    getCountXoaHopDong () {
+      let count = 0;
+
+      this.noti.map(item => {
+        if (item.ten === "HOPDONGXOA") {
+          count += 1;
+        }
+      })
+      return count;
+    },
+    getCountSuaHopDong () {
+      let count = 0;
+
+      this.noti.map(item => {
+        if (item.ten === "HOPDONGTHAYDOI") {
           count += 1;
         }
       })

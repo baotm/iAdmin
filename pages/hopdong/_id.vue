@@ -1,5 +1,71 @@
 <template>
   <div class="container-fluid">
+    <!-- modal donglai -->
+    <div
+      class="modal fade"
+      id="modalDongLai"
+    >
+      <b-overlay :show="showDonglai">
+
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5
+                class="modal-title"
+                id="exampleModalLabel"
+              >Đóng Lãi Hợp Đồng</h5>
+
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+              >
+                <i class="anticon anticon-close"></i>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <b-form-group
+                label="Tiền Nợ"
+                description="Tiền Nợ Hợp Đồng"
+              >
+                <b-form-input
+                  v-model="donglai.tienno"
+                  placeholder="Số Tiền"
+                ></b-form-input>
+              </b-form-group>
+              <b-form-group
+                label="Ngày Đóng Lãi"
+                description="Ngày Đóng Lãi"
+              >
+                <b-form-datepicker
+                  today-button
+                  close-button
+                  @change="getTienLai"
+                  v-model="donglai.ngaycam"
+                ></b-form-datepicker>
+              </b-form-group>
+              <p>Ngày Thế <code>{{  getNgayThe () }}</code> ngày</p>
+              <p>Số Tiền Lãi Phải Thu : <code>{{numberWithCommas(getTienLai())}}</code></p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-default"
+                data-dismiss="modal"
+              >Close</button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                @click="donglaihopdong"
+              >Đóng Lãi</button>
+            </div>
+          </div>
+        </div>
+
+      </b-overlay>
+    </div>
+    <!--end modal donglai -->
     <b-overlay :show="show">
       <template #overlay>
 
@@ -21,7 +87,7 @@
           <div class="card">
             <div class="card-header">
               <h4 class="card-title">Mã Hợp Đồng : <code>{{hopdong.maso}}</code> <span
-                  class="badge badge-pill badge-blue"
+                  class="badge badge-pill badge-blue blink_me"
                   style="float:right"
                 >{{hopdong.tinhtrang}}</span></h4>
             </div>
@@ -53,7 +119,49 @@
                             <i class="m-r-10 text-primary anticon anticon-database"></i>
                             <span>Loại tài sản: </span>
                           </p>
-                          <p class="col font-weight-semibold">{{hopdong.loaitaisan}}</p>
+                          <p class="col font-weight-semibold">
+
+                            <span v-if="hopdong.loaitaisan==='VANG'">
+                              <div
+                                class="badge badge-pill badge-warning text-wrap text-center"
+                                style="width: 6rem;"
+                              >
+                                {{hopdong.loaitaisan}}
+                              </div>
+                            </span>
+                            <span v-else-if="hopdong.loaitaisan==='XE'">
+
+                              <div
+                                class="badge badge-pill badge-info text-wrap text-center"
+                                style="width: 6rem;"
+                              >
+                                {{hopdong.loaitaisan}}
+                              </div>
+
+                            </span>
+
+                            <span v-else-if="hopdong.loaitaisan==='DIENTHOAI'">
+
+                              <div
+                                class="badge badge-pill badge-success text-wrap text-center"
+                                style="width: 6rem;"
+                              >
+                                {{hopdong.loaitaisan}}
+                              </div>
+
+                            </span>
+
+                            <span v-else>
+
+                              <div
+                                class="badge badge-pill badge-primary text-wrap text-center"
+                                style="width: 6rem;"
+                              >
+                                {{hopdong.loaitaisan}}
+                              </div>
+                            </span>
+
+                          </p>
                         </li>
                         <li class="row">
                           <p class="col-sm-5 col-5 font-weight-semibold text-dark m-b-5">
@@ -67,7 +175,7 @@
                             <i class="m-r-10 text-primary anticon anticon-phone"></i>
                             <span>Phone: </span>
                           </p>
-                          <p class="col font-weight-semibold">{{hopdong.sodienthoai}}</p>
+                          <p class="col font-weight-semibold"><code>{{hopdong.sodienthoai}}</code></p>
                         </li>
                         <li class="row">
                           <p class="col-sm-5 col-5 font-weight-semibold text-dark m-b-5">
@@ -270,26 +378,29 @@
                           </div>
 
                         </li>
-                        <li
-                          class="row"
-                          v-if="hopdong.tinhtrang==='CHUACHUOC'"
-                        >
-                          <nuxt-link
-                            class="btn btn-primary btn-tone m-r-5"
-                            :to="{ path: '/hopdong/edit/'+$route.params.id}"
-                          >
-                            Sửa Hợp Đồng
-                          </nuxt-link>
-                          <button
-                            class="btn btn-primary btn-tone m-r-5"
-                            @click="donglaiHopDong"
-                          >Đóng Lãi</button>
+                        <li v-if="hopdong.tinhtrang==='CHUACHUOC'">
+                          <center>
+                            <nuxt-link
+                              class="btn btn-primary btn-tone m-r-5"
+                              :to="{ path: '/hopdong/edit/'+$route.params.id}"
+                            >
+                              Sửa Hợp Đồng
+                            </nuxt-link>
+                            <button
+                              class="btn btn-warning btn-tone m-r-5"
+                              data-toggle="modal"
+                              data-target="#modalDongLai"
+                            >Đóng Lãi</button>
 
-                          <button
-                            class="btn btn-primary btn-tone m-r-5"
-                            @click="chuocHopDong"
-                          >Chuộc</button>
-
+                            <button
+                              class="btn btn-success btn-tone m-r-5"
+                              @click="chuocHopDong"
+                            >Chuộc</button>
+                            <button
+                              class="btn btn-danger btn-tone m-r-5"
+                              @click="chuocHopDong"
+                            >Xóa Hợp Đồng</button>
+                          </center>
                         </li>
 
                       </ul>
@@ -330,6 +441,41 @@
               class="card-body"
               v-if="nhatkilai"
             >
+              <b-table
+                :items="nhatkilai"
+                :fields="nhatkilai_fields"
+              >
+                <template #cell(account)="data">
+
+                  <nuxt-link :to="{ path: '/account/'+data.item.account.account_id}">
+                    {{data.item.account.RealName}}
+                  </nuxt-link>
+
+                </template>
+
+                <template #cell(stt)="data">
+                  {{ data.index + 1 }}
+                </template>
+
+                <template #cell(sotien)="data">
+                  {{numberWithCommas(data.item.SoTien)}}
+
+                </template>
+                <template #cell(type)="data">
+
+                  <span v-if="data.item.Ten=='DONGLAI'">
+
+                    <span class="badge badge-secondary">
+                      {{data.item.Ten}}
+                    </span>
+
+                  </span>
+                  <span v-else>
+                    <span class="badge badge-warning"> {{data.item.Ten}}</span>
+
+                  </span>
+                </template>
+              </b-table>
 
             </div>
             <div
@@ -409,7 +555,16 @@
                         </nuxt-link>
                       </td>
                       <td>{{formatDay(item.createdAt)}}</td>
-                      <td>{{numberWithCommas(sotien)}}</td>
+                      <td>
+
+                        <span v-if="item.diendai=='CHI'">
+                          <i class="anticon anticon-minus text-danger"></i> {{numberWithCommas(Math.abs(item.sotien))}}
+                        </span>
+                        <span v-else>
+                          <i class="anticon anticon-plus text-success"></i> {{numberWithCommas(Math.abs(item.sotien))}}
+                        </span>
+
+                      </td>
                       <td>
 
                         <span v-if="item.diendai=='CHI'">
@@ -419,12 +574,8 @@
                           </span>
 
                         </span>
-                        <span
-                          v-else
-                          class
-                        >
+                        <span v-else>
                           <span class="badge badge-warning"> {{item.diendai}}</span>
-
                         </span>
 
                       </td>
@@ -434,6 +585,22 @@
                     </tr>
 
                   </tbody>
+                  <tfoot v-if="chungtu">
+                    <tr>
+                      <td colspan="5">
+
+                        <p class="font-weight-semibold"><span class="badge badge-warning">Tổng Thu</span>: <code>{{numberWithCommas(getSumThu)}}</code> <span class="badge badge-pill badge-info">vnd</span> </p>
+
+                        <p class="font-weight-semibold"> <span class="badge badge-secondary">
+                            Tổng Chi
+                          </span>: <code>{{numberWithCommas(getSumChi)}}</code> <span class="badge badge-pill badge-info">vnd</span> </p>
+
+                        <p class="font-weight-semibold"><span class="badge badge-success">Tổng Tiền</span>: <code>{{numberWithCommas(getSumChungTu)}}</code> <span class="badge badge-pill badge-info">vnd</span> </p>
+
+                      </td>
+
+                    </tr>
+                  </tfoot>
                 </table>
               </div>
 
@@ -446,6 +613,7 @@
             </div>
           </div>
         </div>
+
       </div>
     </b-overlay>
   </div>
@@ -456,6 +624,7 @@ export default {
   data () {
     return {
       id: '',
+      showDonglai: false,
       dongy: false,
       messageCreate: '',
       show: false,
@@ -465,10 +634,58 @@ export default {
       thanhly: null,
       nhatkilai: null,
       nhatkilienlac: null,
-      chungtu: {}
+      chungtu: null,
+      donglai: {
+        tienlai: 0,
+        tienno: 0,
+        ngaycam: this.$moment(Date.now()).format('YYYY-MM-DD')
+      },
+      nhatkilai_fields: [
+        { key: 'stt', label: 'Stt' },
+        { key: 'account', label: 'Account', sortable: true },
+        { key: 'type', label: 'Phân Loại', sortable: true },
+        { key: 'sotien', label: 'Số Tiền', sortable: true },
+
+        {
+          key: 'thoigian', label: 'Thời Gian', sortable: true,
+          formatter: (value, key, item) => {
+            return this.$moment(item.createdAt).format('DD-MM-YYYY')
+          }
+        }
+
+      ]
     }
   },
   computed: {
+    getSumChungTu () {
+      let total = 0;
+      total = this.getSumThu - this.getSumChi;
+      return total;
+    },
+    getSumChi () {
+      let total = 0;
+
+      this.chungtu.map(item => {
+        if (item.diendai === 'CHI') {
+          total += parseInt(Math.abs(item.sotien))
+        }
+      })
+
+
+      return total;
+    },
+    getSumThu () {
+      let total = 0;
+
+      this.chungtu.map(item => {
+        if (item.diendai === 'THU') {
+          total += parseInt(Math.abs(item.sotien))
+        }
+      })
+
+
+      return total;
+    },
     getRating () {
       let thoihancam = this.thoigiancam * 30;
       let phantram = (this.thoihannhacnho / (thoihancam + this.thoihannhacnho) * 10) / 2
@@ -517,15 +734,88 @@ export default {
 
 
   },
+  async beforeMount () {
+    //thay the async fecth
+    let id = this.$route.params.id
+    this.id = id;
+    this.tracking = await this.$strapi.$trackings.find({ hopdong_id: id });
+    this.hopdong = await this.$strapi.$hopdongs.findOne(id)
+    this.account = this.hopdong.thongtinnhanvien;
+    this.chungtu = await this.$strapi.$chungtus.find({ hopdong_id: id })
+    this.nhatkilai = await this.$strapi.$nhatkihopdongs.find({ hopdong_id: id })
+
+  },
   methods: {
+
+
+    getNgayThe () {
+      let t = this.$moment(this.hopdong.ngaythe)
+      let a = this.$moment(this.donglai.ngaycam).diff(t, 'days')
+      a = a + 1;
+      return a
+    },
+    getTienLai () {
+      let t = this.$moment(this.hopdong.ngaythe)
+      let a = this.$moment(this.donglai.ngaycam).diff(t, 'days')
+      a = a + 1;
+
+      let sotien = 0;
+      let money = (a * this.hopdong.sotien * this.hopdong.laixuat / 1000 / 30)
+      if (money < 5000) {
+        sotien = 5000
+      } else {
+        sotien = money
+      }
+      return sotien;
+    },
     async wait (ms) {
       return new Promise(resolve => {
         setTimeout(resolve, ms);
       })
     },
-    donglaiHopDong () {
+    async donglaihopdong () {
       //dong lai hop dong 
+      //cap nhat ngaythe,ngayhethan,tienno,
+      //dung modal
+      this.showDonglai = true;
+      let thoihanthe = this.hopdong.thoihancam;
 
+      let ngayhethan = this.$moment(this.donglai.ngaycam).add(thoihanthe, 'month').format('YYYY-MM-DD');
+      let hopdong = {
+        ngaythe: this.donglai.ngaycam,
+        ngayhethan: ngayhethan,
+        tienno: this.donglai.tienno
+      }
+      await this.$strapi.$hopdongs.update(this.id, hopdong)
+
+      //them vao nhatkihopdong
+
+      let nhatkihopdong = {
+        hopdong_id: this.id,
+        account: this.getInfoAccount(),
+        SoTien: this.getTienLai(),
+        Ten: 'DONGLAI'
+      }
+      await this.$strapi.$nhatkihopdongs.create(nhatkihopdong)
+      //cap nhat chungtu
+
+      let chungtu = {
+        hopdong_id: this.id,
+        diendai: 'THU',
+        ghichu: 'THU LÃI CHO HỢP ĐỒNG CẦM ĐỒ',
+        sotien: this.getTienLai()
+      }
+      await this.$strapi.$chungtus.create(chungtu)
+      //them vao notification
+
+      let notification = {
+        ten: 'HOPDONGDONGLAI',
+        account: this.getInfoAccount(),
+        hopdong_id: this.id
+      }
+      await this.$strapi.$notifications.create(notification)
+      this.showDonglai = false;
+      window.location.replace('/hopdong')
     },
     changekhongdongy () {
       this.show = false;
@@ -631,19 +921,29 @@ export default {
 
   },
   async fetch () {
-    let id = this.$route.params.id
-    this.id = id;
-    this.tracking = await this.$strapi.$trackings.find({ hopdong_id: id });
-    this.hopdong = await this.$strapi.$hopdongs.findOne(id)
-    this.account = this.hopdong.thongtinnhanvien;
-    this.chungtu = await this.$strapi.$chungtus.find({ hopdong_id: id })
+    // let id = this.$route.params.id
+    // this.id = id;
+    // this.tracking = await this.$strapi.$trackings.find({ hopdong_id: id });
+    // this.hopdong = await this.$strapi.$hopdongs.findOne(id)
+    // this.account = this.hopdong.thongtinnhanvien;
+    // this.chungtu = await this.$strapi.$chungtus.find({ hopdong_id: id })
+    // this.nhatkilai = await this.$strapi.$nhatkihopdongs.find({ hopdong_id: id })
 
   }
 }
 </script>
 
-<style>
+<style scoped>
 .card-header {
   background-color: #e5f9f6;
+}
+.blink_me {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }
 </style>

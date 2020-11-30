@@ -69,8 +69,17 @@
                 <template #cell(stt)="data">
                   {{ data.index + 1 }}
                 </template>
+                <template #cell(hopdong)="data">
+
+                  <nuxt-link :to="{ path: '/hopdong/'+data.item.hopdong_id}">
+                    {{data.item.hopdong_id}}
+                  </nuxt-link>
+
+                </template>
                 <template #cell(account)="data">
-                  {{ data.item.account.RealName}}
+                  <nuxt-link :to="{ path: '/account/'+data.item.account.account_id}">
+                    {{ data.item.account.RealName}}
+                  </nuxt-link>
                 </template>
                 <template #cell(ten)="data">
                   <span
@@ -78,8 +87,18 @@
                     class="badge badge-secondary"
                   >{{data.item.ten}}</span>
                   <span
-                    v-if="data.item.ten==='HOPDONGKETTHUC'"
+                    v-if="data.item.ten==='HOPDONGDONGLAI'"
                     class="badge badge-success"
+                  >{{data.item.ten}}</span>
+                  <span
+                    v-if="data.item.ten==='HOPDONGKETHUC'"
+                    class="badge badge-warning"
+                  >{{data.item.ten}}</span> <span
+                    v-if="data.item.ten==='HOPDONGTHAYDOI'"
+                    class="badge badge-warning"
+                  >{{data.item.ten}}</span> <span
+                    v-if="data.item.ten==='HOPDONGXOA'"
+                    class="badge badge-danger"
                   >{{data.item.ten}}</span>
                 </template>
                 <template #cell(createdAt)="data">
@@ -124,7 +143,30 @@
 <script>
 export default {
   async fetch () {
-    this.thongbao_hopdong = await this.$strapi.$notifications.find();
+    let temp;
+    let control = this.$route.params.id;
+    if (control == "tatca") {
+      temp = await this.$strapi.$notifications.find();
+    } else if (control == 'dadoc') {
+      temp = await this.$strapi.$notifications.find({ see: true });
+    } else {
+      temp = await this.$strapi.$notifications.find({ see: false });
+    }
+
+    if (control == "moi") {
+      this.thongbao_hopdong = temp.filter(item => item.ten === 'HOPDONGMOI')
+    } else if (control == "donglai") {
+      this.thongbao_hopdong = temp.filter(item => item.ten === 'HOPDONGDONGLAI')
+    } else if (control == "chuoc") {
+      this.thongbao_hopdong = temp.filter(item => item.ten === 'HOPDONGKETHUC')
+    } else if (control == "xoa") {
+      this.thongbao_hopdong = temp.filter(item => item.ten === 'HOPDONGXOA')
+    } else if (control == "sua") {
+      this.thongbao_hopdong = temp.filter(item => item.ten === 'HOPDONGTHAYDOI')
+    } else {
+      this.thongbao_hopdong = temp;
+    }
+
     this.totalItems = this.thongbao_hopdong.length
     this.isBusy = false
   },
@@ -149,12 +191,8 @@ export default {
         see: (state) ? true : false
       }
       let a = await this.$strapi.$notifications.update(id, d);
-
-      this.thongbao_hopdong = await this.$strapi.$notifications.find();
-      this.totalItems = this.thongbao_hopdong.length
-
-      this.isBusy = false;
       // this.show = false
+      window.location.reload();
     }
   },
   data () {
@@ -173,6 +211,7 @@ export default {
 
         { key: 'stt', label: '#' },
         { key: 'account', label: 'Account' },
+        { key: 'hopdong', label: 'Hợp Đồng' },
         { key: 'ten', label: 'Kiểu Thông Báo' },
         { key: 'cachday', label: 'Thời Gian' },
         { key: 'createdAt', label: 'Cách' },

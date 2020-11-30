@@ -265,7 +265,6 @@ export default {
       this.messageCreate = "Tạo Hợp Đồng"
       //submit form
       let ngayhethan = this.$moment(this.form.NgayCam).add(parseInt(this.form.ThoiHanCam), 'month').format('YYYY-MM-DD')
-
       let hopdong = {
         ghichuhopdong: this.form.GhiChu,
         laixuat: (this.form.laixuat),
@@ -287,9 +286,6 @@ export default {
       }
       let Object_hopdong = await this.$strapi.$hopdongs.create(hopdong);
       this.messageCreate = "Tạo Tracking Cho Hợp Đồng"
-
-
-
       let data_tracking = {
         TenHanhDong: 'TAOHOPDONG',
         kho: {
@@ -317,8 +313,6 @@ export default {
       }
 
       this.messageCreate = "Lưu Nhật Kí"
-
-
       //tao chungtu
       let data_chungtu = {
         sotien: this.form.SoTien,
@@ -328,7 +322,6 @@ export default {
       }
       let Object_chungtu = await this.$strapi.$chungtus.create(data_chungtu)
       //end taochungtu
-
       this.messageCreate = "Lưu Thông Tin Truy Cập CHo Hợp Đồng"
       let nhatkihopdong = {
         Ten: "CAMDO",
@@ -336,9 +329,7 @@ export default {
         account: this.getInfoAccount(),
       }
       await this.$strapi.$nhatkihopdongs.create(nhatkihopdong)
-
       this.messageCreate = "Tạo Xong Hợp Đồng"
-
       let notification = {
         ten: "HOPDONGMOI",
         account: this.getInfoAccount(),

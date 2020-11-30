@@ -477,9 +477,60 @@ export default {
         diachi: this.form.diachi
       }
       await this.$strapi.$hopdongs.update(this.id, hopdong1)
-      await this.wait(1000)
+      //them thanh dong
+
+      this.messageCreate = "Cập nhật chứng từ"
+      //cap nhat chungtu
+      //neu thay doi so tien se cap nhat vao chung tu
+      if (this.hopdongGoc.sotien != this.form.SoTien) {
+        let j = parseInt(this.hopdongGoc.sotien) - parseInt(this.form.SoTien);
+        let chungtu = {
+          hopdong_id: this.id,
+          diendai: (j > 0) ? "THU" : "CHI",
+          ghichu: (j > 0) ? "TRẢ VÀO TIỀN VỐN" : "LẤY THÊM TIỀN VỐN",
+          sotien: j
+        }
+        await this.$strapi.$chungtus.create(chungtu)
+
+
+        let nhatkihopdong = {
+          hopdong_id: this.id,
+          account: this.getInfoAccount(),
+          SoTien: j,
+          Ten: 'SUAHOPDONG'
+        }
+        await this.$strapi.$nhatkihopdongs.create(nhatkihopdong)
+      }
+      //SOTIENNO
+      if (this.hopdongGoc.tienno != this.form.tienno) {
+        let j = parseInt(this.hopdongGoc.tienno) - parseInt(this.form.tienno);
+        let chungtu = {
+          hopdong_id: this.id,
+          diendai: (j > 0) ? "THU" : "CHI",
+          ghichu: (j > 0) ? "TRẢ VÀO TIỀN NỢ" : "LẤY THÊM TIỀN NỢ",
+          sotien: j
+        }
+        await this.$strapi.$chungtus.create(chungtu)
+
+        let nhatkihopdong = {
+          hopdong_id: this.id,
+          account: this.getInfoAccount(),
+          SoTien: j,
+          Ten: 'SUAHOPDONG'
+        }
+        await this.$strapi.$nhatkihopdongs.create(nhatkihopdong)
+      }
+      //them vao notification
+      this.messageCreate = "Cập nhật thông báo"
+      let notification = {
+        ten: 'HOPDONGTHAYDOI',
+        account: this.getInfoAccount(),
+        hopdong_id: this.id
+      }
+      await this.$strapi.$notifications.create(notification)
+      //  
       this.show = false;
-      this.$router.push('/hopdong')
+      window.location.replace('/hopdong/')
 
     },
     getInfoAccount () {
@@ -495,6 +546,7 @@ export default {
   },
   async fetch () {
     let hopdong = await this.$strapi.$hopdongs.findOne(this.$route.params.id)
+    this.hopdongGoc = hopdong;
     if (hopdong.tinhtrang === "CHUACHUOC") {
       this.tinhtrang = false
     } else {
@@ -531,6 +583,7 @@ export default {
       hopdong: null,
       id: this.$route.params.id,
       show: false,
+      hopdongGoc: {},
       form: {
         GhiChu: "",
         ThongTinTaiSan: "",
