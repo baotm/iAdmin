@@ -60,54 +60,83 @@
             href="javascript:void(0);"
             data-toggle="dropdown"
           >
-            <i class="anticon anticon-bell notification-badge"></i>
+            <div class="avatar avatar-cyan avatar-badge avatar-square">
+              <i class="anticon anticon-bell notification-badge"></i>
+              <span class="badge badge-indicator badge-danger">{{noti.length}}</span>
+            </div>
+
           </a>
           <div class="dropdown-menu pop-notification">
             <div class="p-v-15 p-h-25 border-bottom d-flex justify-content-between align-items-center">
               <p class="text-dark font-weight-semibold m-b-0">
                 <i class="anticon anticon-bell"></i>
-                <span class="m-l-10">Notification</span>
+                <span class="m-l-10">Thông Báo</span>
               </p>
-              <a
+              <nuxt-link
+                to="/thongbao/"
                 class="btn-sm btn-default btn"
-                href="javascript:void(0);"
               >
+
                 <small>View All</small>
-              </a>
+
+              </nuxt-link>
+
             </div>
             <div class="relative">
               <div
-                class="overflow-y-auto relative scrollable"
+                class="overflow-y-auto relative scrollable "
                 style="max-height: 300px"
               >
-                <a
-                  href="javascript:void(0);"
+                <nuxt-link
+                  to="/thongbao/moi"
                   class="dropdown-item d-block p-15 border-bottom"
                 >
-                  <div class="d-flex">
-                    <div class="avatar avatar-blue avatar-icon">
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-cyan avatar-icon avatar-badge avatar-square ">
                       <i class="anticon anticon-mail"></i>
+                      <span class="badge badge-indicator badge-danger">{{getCountHopDongMoi}}</span>
                     </div>
+
                     <div class="m-l-15">
-                      <p class="m-b-0 text-dark">You received a new message</p>
-                      <p class="m-b-0"><small>8 min ago</small></p>
+                      <p class="m-b-0 text-dark">Hợp Đồng Mới</p>
+
                     </div>
                   </div>
-                </a>
-                <a
-                  href="javascript:void(0);"
+                </nuxt-link>
+                <nuxt-link
+                  to="/thongbao/donglai"
                   class="dropdown-item d-block p-15 border-bottom"
                 >
-                  <div class="d-flex">
-                    <div class="avatar avatar-cyan avatar-icon">
-                      <i class="anticon anticon-user-add"></i>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-cyan avatar-icon avatar-badge avatar-square ">
+
+                      <i class="anticon anticon-money-collect"></i>
+                      <span class="badge badge-indicator badge-danger">{{getCountDongLai}}</span>
                     </div>
+
                     <div class="m-l-15">
-                      <p class="m-b-0 text-dark">New user registered</p>
-                      <p class="m-b-0"><small>7 hours ago</small></p>
+                      <p class="m-b-0 text-dark">Đóng Lãi</p>
+
                     </div>
                   </div>
-                </a>
+                </nuxt-link>
+                <nuxt-link
+                  to="/thongbao/chuoc"
+                  class="dropdown-item d-block p-15 border-bottom"
+                >
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-cyan avatar-icon avatar-badge avatar-square ">
+                      <i class="anticon anticon-api"></i>
+                      <span class="badge badge-indicator badge-danger">{{getCountChuoc}}</span>
+                    </div>
+
+                    <div class="m-l-15">
+                      <p class="m-b-0 text-dark">Chuộc</p>
+
+                    </div>
+                  </div>
+                </nuxt-link>
+
               </div>
             </div>
           </div>
@@ -190,8 +219,44 @@ export default {
       info: {},
       show: false,
       fullSreen: false,
-      clogout: false
+      clogout: false,
+      noti: [],
     }
+  },
+  computed: {
+    getCountChuoc () {
+      let count = 0;
+
+      this.noti.map(item => {
+        if (item.ten === "HOPDONGKETHUC") {
+          count += 1;
+        }
+      })
+      return count;
+    },
+    getCountDongLai () {
+      let count = 0;
+
+      this.noti.map(item => {
+        if (item.ten === "HOPDONGDONGLAI") {
+          count += 1;
+        }
+      })
+      return count;
+    },
+    getCountHopDongMoi () {
+      let count = 0;
+
+      this.noti.map(item => {
+        if (item.ten === "HOPDONGMOI") {
+          count += 1;
+        }
+      })
+      return count;
+    }
+  },
+  async fetch () {
+    this.noti = await this.$strapi.$notifications.find({ see: false });
   },
   beforeMount () {
 

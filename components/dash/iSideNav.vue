@@ -34,11 +34,7 @@
               <nuxt-link to="/hopdong/new">Thêm Hợp Đồng</nuxt-link>
 
             </li>
-            <li>
 
-              <nuxt-link to="/hopdong/edit">Chỉnh Hợp Đồng</nuxt-link>
-
-            </li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -66,6 +62,49 @@
             </li>
             <li>
               <nuxt-link to="#">Cấu Hình Truy Cập</nuxt-link>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="dropdown-toggle"
+            href="javascript:void(0);"
+          >
+            <span class="icon-holder"><i class="anticon anticon-user"></i>
+            </span>
+            <span class="title">Chứng Từ</span>
+            <span class="arrow">
+              <i class="arrow-icon"></i>
+            </span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <nuxt-link to="/chungtu/">Danh Sách</nuxt-link>
+            </li>
+
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="dropdown-toggle"
+            href="javascript:void(0);"
+          >
+            <span class="icon-holder"><i class="anticon anticon-user"></i>
+            </span>
+            <span class="title">Thông báo</span>
+            <span class="arrow">
+              <i class="arrow-icon"></i>
+            </span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <nuxt-link to="/thongbao/new">Chưa Đọc</nuxt-link>
+            </li>
+            <li>
+              <nuxt-link to="/thongbao/dadoc">Đã đọc</nuxt-link>
+            </li>
+            <li>
+              <nuxt-link to="/thongbao/">Tất cả</nuxt-link>
             </li>
           </ul>
         </li>

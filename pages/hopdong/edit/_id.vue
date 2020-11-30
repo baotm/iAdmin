@@ -1,30 +1,21 @@
 <template>
-  <div class="mt-5">
-    <form>
-      <div class="page-header no-gutters has-tab">
-        <div class="d-md-flex m-b-15 align-items-center justify-content-between">
-          <div class="media align-items-center m-b-15">
-            <div
-              class="avatar avatar-image rounded"
-              style="height: 70px; width: 70px"
-            >
-              <img
-                src="#"
-                alt=""
-              >
-            </div>
-            <div class="m-l-15">
-              <h4 class="m-b-0">{{hopdong.tenkhach}}</h4>
-              <p class="text-muted m-b-0">Code: {{hopdong.maso}}</p>
-            </div>
-          </div>
-          <div class="m-b-15">
-            <button class="btn btn-primary">
-              <i class="anticon anticon-save"></i>
-              <span>Save</span>
-            </button>
-          </div>
+  <div class="">
+    <b-overlay :show="show">
+      <template #overlay>
+
+        <h5>{{messageCreate}}</h5>
+        <div v-if="!dongy">
+          <button
+            class="btn btn-warning m-r-5"
+            @click="changeDongY"
+          >Tôi Đồng Ý</button>
+          <button
+            class="btn btn-secondary m-r-5"
+            @click="changekhongdongy"
+          >Không Đồng Ý</button>
         </div>
+      </template>
+      <div class="page-header has-tab">
         <ul class="nav nav-tabs">
           <li class="nav-item">
             <a
@@ -56,79 +47,262 @@
         >
           <div class="card">
             <div class="card-body">
-              <div class="form-group">
-                <label
-                  class="font-weight-semibold"
-                  for="productName"
-                >Tên Người Thế</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  :placeholder="hopdong.tenkhach"
-                  :value="hopdong.tenkhach"
-                >
-              </div>
-              <div class="form-group">
-                <label
-                  class="font-weight-semibold"
-                  for="productPrice"
-                >Số Tiền Thế</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  :placeholder="hopdong.sotien"
-                  :value="hopdong.sotien"
-                >
-              </div>
-              <div class="form-group">
-                <label
-                  class="font-weight-semibold"
-                  for="productCategory"
-                >Category</label>
-                <select
-                  class="custom-select"
-                  id="productCategory"
-                >
-                  <option
-                    value="cloths"
-                    selected
-                  >Cloths</option>
-                  <option value="homeDecoration">Home Decoration</option>
-                  <option value="eletronic">Eletronic</option>
-                  <option value="jewellery">Jewellery</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label
-                  class="font-weight-semibold"
-                  for="productBrand"
-                >Brand</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="productBrand"
-                  placeholder="Brand"
-                  value="H&M"
-                >
-              </div>
-              <div class="form-group">
-                <label
-                  class="font-weight-semibold"
-                  for="productStatus"
-                >Status</label>
-                <select
-                  class="custom-select"
-                  id="productStatus"
-                >
-                  <option
-                    value="inStock"
-                    selected
-                  >In Stock</option>
-                  <option value="outOfStock">Out of Stock</option>
-                  <option value="pending">Pending</option>
-                </select>
+              <h4>Sửa Hợp đồng</h4>
+              <p>Ngày, giờ, thông tin của <code>bạn</code> sẽ được lưu lại đầy đủ để phục vụ cho việc kiểm tra</p>
+              <div class="row">
+                <div class="col-8">
+                  <b-form
+                    validated
+                    class="row"
+                    v-on:submit.prevent="submitForm"
+                  >
+                    <!-- select loaidothe -->
+
+                    <b-form-group
+                      label="Loại Tài Sản"
+                      class="col-6"
+                    >
+                      <b-form-input
+                        disabled
+                        v-model="form.loaitaisan"
+                      >
+
+                      </b-form-input>
+
+                      <b-form-invalid-feedback>
+                        Phải chọn 1 mục.
+                      </b-form-invalid-feedback>
+                      <b-form-valid-feedback>
+                        Ổn rồi.
+                      </b-form-valid-feedback>
+                    </b-form-group>
+                    <!-- sodienthoai -->
+                    <b-form-group
+                      label="Số Điện Thoại"
+                      class="col-3"
+                    >
+                      <b-form-input
+                        autocomplete="off"
+                        v-model="form.SoDienThoai"
+                        class="form-control"
+                        required
+                      ></b-form-input>
+                    </b-form-group>
+                    <!-- input maso -->
+                    <b-form-group
+                      label="Mã Số"
+                      class="col-3"
+                    >
+                      <b-form-input
+                        v-model="form.maso"
+                        class="form-control"
+                        disabled
+                      ></b-form-input>
+                    </b-form-group>
+                    <!-- ten nguoi the -->
+                    <b-form-group
+                      label="Tên Người Thế"
+                      class="col-4"
+                    >
+                      <b-input
+                        v-model="form.TenNguoiCam"
+                        autocomplete="off"
+                        required
+                        class="form-control"
+                      ></b-input>
+                      <b-form-invalid-feedback>
+                        Không Bỏ Trống
+                      </b-form-invalid-feedback>
+                      <b-form-valid-feedback>
+                        Ổn rồi.
+                      </b-form-valid-feedback>
+                    </b-form-group>
+                    <b-form-group
+                      label="Địa Chỉ"
+                      class="col-4"
+                    >
+                      <b-input
+                        v-model="form.diachi"
+                        autocomplete="off"
+                        required
+                        class="form-control"
+                      ></b-input>
+                      <b-form-text>Không viết dấu</b-form-text>
+                      <b-form-invalid-feedback>
+                        Không Bỏ Trống
+                      </b-form-invalid-feedback>
+                      <b-form-valid-feedback>
+                        Ổn rồi.
+                      </b-form-valid-feedback>
+                    </b-form-group>
+                    <!-- so tien -->
+                    <b-form-group
+                      label="Số Tiền"
+                      class="col-4"
+                    >
+                      <b-input
+                        v-model="form.SoTien"
+                        :state="sotienState"
+                        autocomplete="off"
+                        class="form-control"
+                      ></b-input>
+                      <b-form-invalid-feedback>
+                        Tối thiểu 100k
+                      </b-form-invalid-feedback>
+                      <b-form-valid-feedback>
+                        {{numberWithCommas(this.form.SoTien)}}
+                      </b-form-valid-feedback>
+                    </b-form-group>
+                    <!-- ngay cam -->
+                    <b-form-group
+                      label="Ngày Cầm"
+                      class="col-6"
+                    >
+                      <b-form-datepicker
+                        v-model="form.NgayCam"
+                        required
+                      ></b-form-datepicker>
+
+                    </b-form-group>
+                    <!-- thoi han cam -->
+                    <b-form-group
+                      label="Thời Hạn Cầm"
+                      class="col-3"
+                    >
+                      <b-form-input
+                        required
+                        type="number"
+                        v-model="form.ThoiHanCam"
+                      >
+
+                      </b-form-input>
+
+                      <b-form-invalid-feedback>
+                        Phải chọn 1 mục.
+                      </b-form-invalid-feedback>
+                      <b-form-valid-feedback>
+                        Ổn rồi.
+                      </b-form-valid-feedback>
+                    </b-form-group>
+                    <!-- lai xuat -->
+                    <b-form-group
+                      label="Lãi Xuất"
+                      class="col-3"
+                      disabled
+                    >
+
+                      <b-form-input
+                        v-model="form.laixuat"
+                        required
+                      >
+
+                      </b-form-input>
+                      <b-form-invalid-feedback>
+                        Phải chọn 1 mục.
+                      </b-form-invalid-feedback>
+                      <b-form-valid-feedback>
+                        Ổn rồi.
+                      </b-form-valid-feedback>
+                    </b-form-group>
+                    <!-- kho luu -->
+                    <b-form-group
+                      label="Kho Lưu"
+                      class="col-4"
+                    >
+                      <b-form-input
+                        v-model="form.kho"
+                        required
+                        disabled
+                      >
+
+                      </b-form-input>
+                      <b-form-invalid-feedback>
+                        Phải chọn 1 mục.
+                      </b-form-invalid-feedback>
+                      <b-form-valid-feedback>
+                        Ổn rồi.
+                      </b-form-valid-feedback>
+                    </b-form-group>
+                    <!-- tien no -->
+                    <b-form-group
+                      label="Tiền Nợ"
+                      class="col-4"
+                    >
+                      <b-input
+                        v-model="form.tienno"
+                        required
+                        class="form-control"
+                      ></b-input>
+
+                      <b-form-invalid-feedback>
+                        Không Bỏ Trống
+                      </b-form-invalid-feedback>
+                      <b-form-valid-feedback>
+                        {{numberWithCommas(this.form.tienno)}}
+                      </b-form-valid-feedback>
+
+                    </b-form-group>
+                    <b-form-group
+                      label="Tình Trạng"
+                      class="col-4"
+                    >
+                      <b-form-checkbox
+                        v-model="tinhtrang"
+                        name="check-button"
+                        switch
+                        size="lg"
+                      >
+
+                      </b-form-checkbox>
+
+                      <b-form-text>
+                        Tình Trạng <b>( {{ tinhtrang?"Đã Chuộc":"Chưa Chuộc" }})</b>
+                      </b-form-text>
+                    </b-form-group>
+                    <!-- thong tin mon do -->
+                    <b-form-group
+                      class="col-8"
+                      label="Thông Tin Món Đồ"
+                    >
+                      <b-form-textarea
+                        autocomplete="off"
+                        v-model="form.ThongTinTaiSan"
+                        placeholder="Enter something..."
+                        rows="6"
+                      ></b-form-textarea>
+
+                    </b-form-group>
+                    <b-form-group
+                      class="col-4"
+                      label="Ghi Chú Hợp Đồng"
+                    >
+                      <b-form-textarea
+                        autocomplete="off"
+                        v-model="form.GhiChu"
+                        placeholder="Enter something..."
+                        rows="6"
+                      ></b-form-textarea>
+
+                    </b-form-group>
+
+                    <button class="btn btn-primary">
+                      <i class="anticon anticon-save"></i>
+                      <span>Save</span>
+                    </button>
+                  </b-form>
+
+                </div>
+
+                <div class="col-4">
+
+                  <img
+                    style="width:100%"
+                    src="https://iadminpicture.s3.amazonaws.com/thumbnail_ironman_4e6acf40d1.jpg"
+                  />
+                </div>
               </div>
             </div>
+
           </div>
         </div>
         <div
@@ -252,24 +426,124 @@
           </div>
         </div>
       </div>
-    </form>
+
+    </b-overlay>
   </div>
 </template>
 
 <script>
 export default {
-  data () {
-    return {
-      hopdong: {},
-      id: this.$route.params.id
+  methods: {
+    changekhongdongy () {
+      this.show = false;
+    },
+    changeDongY () {
+      this.messageCreate = "Chờ xíu..."
+      this.dongy = true;
+      this.submitForm();
+    },
+    async wait (ms) {
+      return new Promise(resolve => {
+        setTimeout(resolve, ms);
+      })
+    },
+    numberWithCommas (x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    async submitForm () {
+      let acc = this.getInfoAccount();
+      this.messageCreate = acc.RealName + " Phải Chịu Trách Nhiệm Cho Việc Này "
+      this.show = true;
+      if (!this.dongy) {
+        return;
+      }
+      this.messageCreate = "Sửa Hợp Đồng Thành Công"
+
+      //submit form
+      let ngayhethan = this.$moment(this.form.NgayCam).add(parseInt(this.form.ThoiHanCam), 'month').format('YYYY-MM-DD')
+
+      let hopdong1 = {
+        ghichuhopdong: this.form.GhiChu,
+        ngaythe: this.form.NgayCam,
+        sodienthoai: this.form.SoDienThoai,
+        sotien: this.form.SoTien,
+        tenkhach: this.form.TenNguoiCam,
+        thongtinmondo: this.form.ThongTinTaiSan,
+        thongtinnhanvien: this.getInfoAccount(),
+        tienno: this.form.tienno,
+        tinhtrang: (this.tinhtrang ? "DACHUOC" : "CHUACHUOC"),
+        thoihancam: (this.form.ThoiHanCam),
+        ngayhethan: ngayhethan,
+        diachi: this.form.diachi
+      }
+      await this.$strapi.$hopdongs.update(this.id, hopdong1)
+      await this.wait(1000)
+      this.show = false;
+      this.$router.push('/hopdong')
+
+    },
+    getInfoAccount () {
+      let info = this.$cookies.get('info');
+
+      return {
+        account_id: info._id,
+        name: info.username,
+        RealName: info.RealName,
+        phone: info.Phone,
+      }
     }
   },
   async fetch () {
-    this.hopdong = await this.$strapi.$hopdongs.findOne(this.$route.params.id)
-    console.log(this.hopdong)
+    let hopdong = await this.$strapi.$hopdongs.findOne(this.$route.params.id)
+    if (hopdong.tinhtrang === "CHUACHUOC") {
+      this.tinhtrang = false
+    } else {
+      this.tinhtrang = true
+    }
+    this.form = {
+      GhiChu: hopdong.ghichuhopdong,
+      ThongTinTaiSan: hopdong.thongtinmondo,
+      SoTien: hopdong.sotien,
+      maso: hopdong.maso,
+      SoDienThoai: hopdong.sodienthoai,
+      tienno: hopdong.tienno,
+      NgayCam: this.$moment(hopdong.ngaythe).format("YYYY-MM-DD"),
+      kho: hopdong.kholuu,
+      loaitaisan: hopdong.loaitaisan,
+      ThoiHanCam: hopdong.thoihancam,
+      TenNguoiCam: hopdong.tenkhach,
+      laixuat: hopdong.laixuat,
+      diachi: hopdong.diachi
+    }
+    //set select loaitaisan
+
+  },
+  computed: {
+    sotienState () {
+      return this.form.SoTien > 10000 ? true : false
+    }
+  },
+  data () {
+    return {
+      messageCreate: '',
+      tinhtrang: false,
+      dongy: false,
+      hopdong: null,
+      id: this.$route.params.id,
+      show: false,
+      form: {
+        GhiChu: "",
+        ThongTinTaiSan: "",
+        SoTien: 0,
+        maso: '',
+        SoDienThoai: 'Không',
+        tienno: 0,
+        NgayCam: '',
+        kho: '',
+      },
+    }
   }
 }
 </script>
-
 <style>
 </style>

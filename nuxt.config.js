@@ -53,20 +53,19 @@ export default {
     url: 'http://localhost:3001',
     // url: 'https://iadminstrapi.herokuapp.com',
     entities: [
-      'logs',
       'accounts',
       'hopdongs',
       'khos',
       'loaitaisans',
-      'Logs',
       'nhatkihopdongs',
       'nhatkitruycaps',
       'taisancams',
-      'thuoctinhmondos',
       'trackings',
       'listuseronlines',
       'socaitienmats',
       'chungtus',
+      'notifications'
+
 
     ]
   },

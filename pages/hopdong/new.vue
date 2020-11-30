@@ -61,7 +61,7 @@
                 <!-- ten nguoi the -->
                 <b-form-group
                   label="Tên Người Thế"
-                  class="col-6"
+                  class="col-4"
                 >
                   <b-input
                     v-model="form.TenNguoiCam"
@@ -76,10 +76,30 @@
                     Ổn rồi.
                   </b-form-valid-feedback>
                 </b-form-group>
+                <b-form-group
+                  label="Địa Chỉ"
+                  class="col-4"
+                >
+                  <b-input
+                    v-model="form.diachi"
+                    autocomplete="off"
+                    required
+                    class="form-control"
+                  ></b-input>
+                  <b-form-text>
+                    Viết Không Dấu
+                  </b-form-text>
+                  <b-form-invalid-feedback>
+                    Không Bỏ Trống
+                  </b-form-invalid-feedback>
+                  <b-form-valid-feedback>
+                    Ổn rồi.
+                  </b-form-valid-feedback>
+                </b-form-group>
                 <!-- so tien -->
                 <b-form-group
                   label="Số Tiền"
-                  class="col-6"
+                  class="col-4"
                 >
                   <b-input
                     v-model="form.SoTien"
@@ -229,7 +249,6 @@
 </template>
 
 <script>
-var myconfig;
 export default {
   methods: {
     async wait (ms) {
@@ -245,10 +264,11 @@ export default {
       event.preventDefault();
       this.messageCreate = "Tạo Hợp Đồng"
       //submit form
-      let ngayhethan = this.$moment(this.form.ThoiHanCam).add(4, 'month').format('YYYY-MM-DD')
+      let ngayhethan = this.$moment(this.form.NgayCam).add(parseInt(this.form.ThoiHanCam), 'month').format('YYYY-MM-DD')
+
       let hopdong = {
         ghichuhopdong: this.form.GhiChu,
-        laixuat: this.form.laixuat,
+        laixuat: (this.form.laixuat),
         loaitaisan: this.form.loaitaisan.Tentaisan,
         maso: "13",
         thoihancam: this.form.ThoiHanCam,
@@ -263,10 +283,11 @@ export default {
         tinhtrang: "CHUACHUOC",
         urlPic: '',
         kholuu: this.form.kho,
+        diachi: this.form.diachi
       }
       let Object_hopdong = await this.$strapi.$hopdongs.create(hopdong);
       this.messageCreate = "Tạo Tracking Cho Hợp Đồng"
-      await this.wait(400)
+
 
 
       let data_tracking = {
@@ -281,7 +302,7 @@ export default {
 
       let Object_tracking = await this.$strapi.$trackings.create(data_tracking);
       //nếu là vàng thì tiếp tục tracking Lưu kho
-      if (hopdong.loaitaisan === "VANG") {
+      if (hopdong.loaitaisan === "VANG" || hopdong.loaitaisan === "DIENTHOAI") {
 
         data_tracking = {
           TenHanhDong: 'LUUKHO',
@@ -296,7 +317,7 @@ export default {
       }
 
       this.messageCreate = "Lưu Nhật Kí"
-      await this.wait(400)
+
 
       //tao chungtu
       let data_chungtu = {
@@ -308,11 +329,22 @@ export default {
       let Object_chungtu = await this.$strapi.$chungtus.create(data_chungtu)
       //end taochungtu
 
+      this.messageCreate = "Lưu Thông Tin Truy Cập CHo Hợp Đồng"
+      let nhatkihopdong = {
+        Ten: "CAMDO",
+        SoTien: this.form.SoTien,
+        account: this.getInfoAccount(),
+      }
+      await this.$strapi.$nhatkihopdongs.create(nhatkihopdong)
 
       this.messageCreate = "Tạo Xong Hợp Đồng"
-      await this.wait(400)
 
-
+      let notification = {
+        ten: "HOPDONGMOI",
+        account: this.getInfoAccount(),
+        hopdong_id: Object_hopdong._id
+      }
+      await this.$strapi.$notifications.create(notification);
       this.show = false;
       this.$router.push('/hopdong')
     },
@@ -408,6 +440,7 @@ export default {
       show: false,
       messageCreate: '',
       form: {
+        diachi: 'phu quy',
         GhiChu: "",
         ThongTinTaiSan: "",
         SoTien: 0,
