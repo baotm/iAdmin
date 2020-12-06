@@ -180,8 +180,8 @@ export default {
 
         //  let loginSession = await this.$strapi.$listuseronlines.create(acc)
         let [nktc, LoginSession] = await Promise.all([
-          this.$strapi.$nhatkitruycaps.create(d),
-          this.$strapi.$listuseronlines.create(acc)
+        
+        
         ])
         this.$cookies.set('loginSession', LoginSession._id, optionCookies)
         location.replace('/')
