@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div v-if="dataReady">
     <b-overlay :show="show">
       <template #overlay>
 
@@ -429,6 +429,20 @@
 
     </b-overlay>
   </div>
+  <div v-else>
+    <b-overlay :show="true">
+      <template #overlay>
+        <div class="text-center">
+          <p>Đang Tải</p>
+          <b-spinner
+            variant="primary"
+            label="Text Centered"
+          ></b-spinner>
+        </div>
+      </template>
+
+    </b-overlay>
+  </div>
 </template>
 
 <script>
@@ -441,11 +455,6 @@ export default {
       this.messageCreate = "Chờ xíu..."
       this.dongy = true;
       this.submitForm();
-    },
-    async wait (ms) {
-      return new Promise(resolve => {
-        setTimeout(resolve, ms);
-      })
     },
     numberWithCommas (x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -484,10 +493,11 @@ export default {
       //neu thay doi so tien se cap nhat vao chung tu
       if (this.hopdongGoc.sotien != this.form.SoTien) {
         let j = parseInt(this.hopdongGoc.sotien) - parseInt(this.form.SoTien);
+
         let chungtu = {
           hopdong_id: this.id,
-          diendai: (j > 0) ? "THU" : "CHI",
-          ghichu: (j > 0) ? "TRẢ VÀO TIỀN VỐN" : "LẤY THÊM TIỀN VỐN",
+          diendai: (parseInt(this.hopdongGoc.sotien) > parseInt(this.form.SoTien)) ? "THU" : "CHI",
+          ghichu: (parseInt(this.hopdongGoc.sotien) > parseInt(this.form.SoTien)) ? "TRẢ VÀO TIỀN VỐN" : "LẤY THÊM TIỀN VỐN",
           sotien: j
         }
         await this.$strapi.$chungtus.create(chungtu)
@@ -500,14 +510,26 @@ export default {
           Ten: 'SUAHOPDONG'
         }
         await this.$strapi.$nhatkihopdongs.create(nhatkihopdong)
+
+        let tienquy = await this.$strapi.$tienquy.find();
+        if (j > 0) {
+          //thu,tra bớt
+          await this.$strapi.$tienquy.update({ sotien: (parseInt(tienquy.sotien) + Math.abs(j)) })
+        } else {
+          //chi
+          let tienquy = await this.$strapi.$tienquy.find();
+          await this.$strapi.$tienquy.update({ sotien: (parseInt(tienquy.sotien) - Math.abs(j)) })
+        }
+
+
       }
       //SOTIENNO
       if (this.hopdongGoc.tienno != this.form.tienno) {
         let j = parseInt(this.hopdongGoc.tienno) - parseInt(this.form.tienno);
         let chungtu = {
           hopdong_id: this.id,
-          diendai: (j > 0) ? "THU" : "CHI",
-          ghichu: (j > 0) ? "TRẢ VÀO TIỀN NỢ" : "LẤY THÊM TIỀN NỢ",
+          diendai: (parseInt(this.hopdongGoc.tienno) > parseInt(this.form.tienno)) ? "THU" : "CHI",
+          ghichu: (parseInt(this.hopdongGoc.tienno) > parseInt(this.form.tienno)) ? "TRẢ VÀO TIỀN NỢ" : "LẤY THÊM TIỀN NỢ",
           sotien: j
         }
         await this.$strapi.$chungtus.create(chungtu)
@@ -518,6 +540,17 @@ export default {
           SoTien: j,
           Ten: 'SUAHOPDONG'
         }
+
+        let tienquy = await this.$strapi.$tienquy.find();
+        if (j > 0) {
+          //thu
+          await this.$strapi.$tienquy.update({ sotien: (parseInt(tienquy.sotien) + Math.abs(j)) })
+        } else {
+          //chi
+          let tienquy = await this.$strapi.$tienquy.find();
+          await this.$strapi.$tienquy.update({ sotien: (parseInt(tienquy.sotien) - Math.abs(j)) })
+        }
+
         await this.$strapi.$nhatkihopdongs.create(nhatkihopdong)
       }
       //them vao notification
@@ -530,7 +563,7 @@ export default {
       await this.$strapi.$notifications.create(notification)
       //  
       this.show = false;
-      window.location.replace('/hopdong/')
+      this.$router.push('/hopdong/')
 
     },
     getInfoAccount () {
@@ -568,7 +601,7 @@ export default {
       diachi: hopdong.diachi
     }
     //set select loaitaisan
-
+    this.dataReady = true
   },
   computed: {
     sotienState () {
@@ -577,6 +610,7 @@ export default {
   },
   data () {
     return {
+      dataReady: false,
       messageCreate: '',
       tinhtrang: false,
       dongy: false,

@@ -15,7 +15,7 @@
 
     </div>
     <div class="logo logo-white">
-      <a href="index.html">
+      <a href="/">
         <img
           src="~assets/images/logo/logo-white.png"
           alt="Logo"
@@ -231,8 +231,8 @@
         </li>
 
         <li>
-          <a href="javascript:void(0);">
-            <i class="anticon anticon-appstore"></i>
+          <a href="/">
+            <i class="anticon anticon-undo"></i>
           </a>
         </li>
       </ul>

@@ -50,8 +50,8 @@ export default {
     '@nuxtjs/strapi'
   ],
   strapi: {
-    url: 'http://localhost:3001',
-    // url: 'https://iadminstrapi.herokuapp.com',
+    // url: 'http://localhost:3001',
+    url: 'https://iadminstrapi.herokuapp.com',
     entities: [
       'accounts',
       'hopdongs',
@@ -64,8 +64,9 @@ export default {
       'listuseronlines',
       'socaitienmats',
       'chungtus',
-      'notifications'
-
+      'notifications',
+      'cauhinh',
+      'tienquy'
 
     ]
   },

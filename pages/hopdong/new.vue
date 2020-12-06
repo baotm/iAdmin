@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="dataReady">
     <b-overlay :show="show">
       <template #overlay>
         <h3>Đang gửi thông tin...</h3>
@@ -246,16 +246,26 @@
       </div>
     </b-overlay>
   </div>
+  <div v-else>
+    <b-overlay :show="true">
+      <template #overlay>
+        <div class="text-center">
+          <p>Đang Tải</p>
+          <b-spinner
+            variant="primary"
+            label="Text Centered"
+          ></b-spinner>
+        </div>
+      </template>
+
+    </b-overlay>
+  </div>
 </template>
 
 <script>
 export default {
   methods: {
-    async wait (ms) {
-      return new Promise(resolve => {
-        setTimeout(resolve, ms);
-      })
-    },
+
     numberWithCommas (x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
@@ -329,13 +339,18 @@ export default {
         account: this.getInfoAccount(),
       }
       await this.$strapi.$nhatkihopdongs.create(nhatkihopdong)
-      this.messageCreate = "Tạo Xong Hợp Đồng"
+      this.messageCreate = "Cập nhật quỹ"
       let notification = {
         ten: "HOPDONGMOI",
         account: this.getInfoAccount(),
         hopdong_id: Object_hopdong._id
       }
       await this.$strapi.$notifications.create(notification);
+
+      //update tienquy
+      let tienquy = await this.$strapi.$tienquy.find();
+      await this.$strapi.$tienquy.update({ sotien: (parseInt(tienquy.sotien) - (this.form.SoTien)) })
+      this.messageCreate = "Tạo Xong Hợp Đồng"
       this.show = false;
       this.$router.push('/hopdong')
     },
@@ -417,7 +432,8 @@ export default {
       return item;
     })
 
-
+    this.dataReady = true;
+    //this.show1 = false;
   },
   computed: {
     sotienState () {
@@ -427,6 +443,7 @@ export default {
   },
   data () {
     return {
+      dataReady: false,
       loaidothe: [],
       show: false,
       messageCreate: '',

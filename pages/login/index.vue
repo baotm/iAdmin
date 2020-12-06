@@ -157,15 +157,7 @@ export default {
         //check is login
 
 
-        let uri = 'https://api.ipify.org'
-        let myip = await fetch(uri);
-        let ip = await myip.text()
 
-        let d = {
-          type: 'DANGNHAP',
-          ip: ip,
-          accounts: info[0]
-        }
         //  await this.$strapi.$nhatkitruycaps.create(d)
         //set cookies here
         let optionCookies = {

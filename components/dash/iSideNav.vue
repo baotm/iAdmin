@@ -43,7 +43,7 @@
             href="javascript:void(0);"
           >
             <span class="icon-holder">
-              <i class="anticon anticon-book"></i>
+              <i class="anticon anticon-tool"></i>
             </span>
             <span class="title">Cấu Hình</span>
             <span class="arrow">
@@ -52,17 +52,9 @@
           </a>
           <ul class="dropdown-menu">
             <li>
-              <nuxt-link to="#">Cấu Hình Tiệm</nuxt-link>
+              <nuxt-link to="/cauhinh">Cấu Hình</nuxt-link>
             </li>
-            <li>
-              <nuxt-link to="#">Cấu Hình Kho</nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="#">Cấu Hình Tài Sản</nuxt-link>
-            </li>
-            <li>
-              <nuxt-link to="#">Cấu Hình Truy Cập</nuxt-link>
-            </li>
+
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -70,7 +62,7 @@
             class="dropdown-toggle"
             href="javascript:void(0);"
           >
-            <span class="icon-holder"><i class="anticon anticon-user"></i>
+            <span class="icon-holder"><i class="anticon anticon-book"></i>
             </span>
             <span class="title">Chứng Từ</span>
             <span class="arrow">
@@ -89,7 +81,7 @@
             class="dropdown-toggle"
             href="javascript:void(0);"
           >
-            <span class="icon-holder"><i class="anticon anticon-user"></i>
+            <span class="icon-holder"><i class="anticon anticon-file-unknown"></i>
             </span>
             <span class="title">Thông báo</span>
             <span class="arrow">

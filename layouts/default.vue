@@ -5,6 +5,7 @@
       <mySideNav />
       <div class="page-container">
         <div class="main-content">
+
           <pageHeader />
           <Nuxt />
 
@@ -31,7 +32,7 @@ export default {
   },
   async created () {
     //login to strapi
-    await this.$strapi.login({ identifier: 'bao@gmail.com', password: 'demo' })
+
 
   },
   watch: {
