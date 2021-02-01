@@ -295,10 +295,9 @@
 
                 <div class="col-4">
 
-                  <img
-                    style="width:100%"
-                    src="https://iadminpicture.s3.amazonaws.com/thumbnail_ironman_4e6acf40d1.jpg"
-                  />
+                  <b-img-lazy :src='hopdongGoc.urlPic'>
+
+                  </b-img-lazy>
                 </div>
               </div>
             </div>
@@ -448,6 +447,20 @@
 <script>
 export default {
   methods: {
+
+    makeToast (mes) {
+      if (mes != "" && mes != undefined) {
+        this.$bvToast.toast(`Lỗi sai :` + mes, {
+          title: 'Thông tin',
+          noCloseButton: true,
+          noAutoHide: true,
+          variant: 'warning',
+          toaster: 'b-toaster-top-center'
+        })
+      }
+
+    },
+
     changekhongdongy () {
       this.show = false;
     },
@@ -578,6 +591,7 @@ export default {
     }
   },
   async fetch () {
+
     let hopdong = await this.$strapi.$hopdongs.findOne(this.$route.params.id)
     this.hopdongGoc = hopdong;
     if (hopdong.tinhtrang === "CHUACHUOC") {
@@ -600,8 +614,11 @@ export default {
       laixuat: hopdong.laixuat,
       diachi: hopdong.diachi
     }
+
     //set select loaitaisan
     this.dataReady = true
+
+    this.makeToast(this.$route.query.msg)
   },
   computed: {
     sotienState () {

@@ -1,6 +1,5 @@
 <template>
-  <div>
-  </div>
+  <h1>asas</h1>
 </template>
 
 <script>

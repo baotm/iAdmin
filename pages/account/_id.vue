@@ -1,5 +1,8 @@
 <template>
-  <div class="container">
+  <div
+    class="container"
+    v-if="dataReady"
+  >
 
     <div class="card">
       <div class="card-body">
@@ -11,14 +14,27 @@
                   class="avatar avatar-image"
                   style="width: 150px; height:150px"
                 >
-                  <img :src="info.Avatar.url">
+                  <img :src="info.Avatar.formats.thumbnail.url">
                 </div>
               </div>
               <div class="text-center text-sm-left m-v-15 p-l-30">
                 <h2 class="m-b-5 text-capitalize">{{info.RealName}}</h2>
                 <p class="text-opacity font-size-13">@baophuong.xyz</p>
                 <p class="text-dark m-b-20">Role {{info.Role}}</p>
-                <button class="btn btn-primary btn-tone">Change Info</button>
+                <nuxt-link
+                  :to="{ path: '/account/edit/'+info._id}"
+                  class="btn btn-primary btn-tone"
+                >
+                  <i class="anticon anticon-edit"></i>
+                  <span class="m-l-5">Sửa</span>
+                </nuxt-link>
+                <b-button
+                  class="btn btn-danger btn-tone"
+                  @click="deleteUser"
+                >
+                  <i class="anticon anticon-delete"></i>
+                  <span class="m-l-5">Xoá</span>
+                </b-button>
               </div>
             </div>
           </div>
@@ -84,22 +100,69 @@
     </div>
 
   </div>
+  <div v-else>
+    <b-overlay :show="true">
+      <template #overlay>
+        <div class="text-center">
+          <p>Đang Tải</p>
+          <b-spinner
+            variant="primary"
+            label="Text Centered"
+          ></b-spinner>
+        </div>
+      </template>
 
+    </b-overlay>
+  </div>
 </template>
 
 <script>
 export default {
   data () {
     return {
-      info: {}
+      info: {},
+      dataReady: false
     }
   },
   async fetch () {
-    let id = this.$route.params.id
-    this.info = await this.$strapi.$accounts.findOne(id);
+    try {
+      let id = this.$route.params.id
+      this.info = await this.$strapi.$accounts.findOne(id);
+      this.dataReady = true
+    } catch (e) {
+      this.dataReady = false;
+      this.$bvToast.toast(`Máy chủ gặp vấn đề, vui lòng thông báo admin hoặc chờ 1p rồi đăng nhập lại`, {
+        title: `Có Lỗi Xảy Ra`,
+        toaster: 'b-toaster-top-center',
+        solid: true,
+        variant: 'danger',
+        autoHideDelay: 1500,
+      })
+    }
+
   },
-  created () {
-    this.info = this.$cookies.get('info')
+  methods: {
+    async deleteUser () {
+      try {
+        this.dataReady = false
+        let id = this.$route.params.id
+        await this.$strapi.$accounts.delete(id);
+        //xoa media
+        let id_media = this.info.Avatar._id;
+        let uri = 'http://localhost:3001/upload/files/' + id_media
+        await this.$axios.delete(uri)
+        window.location.replace('/account')
+      } catch (e) {
+        this.dataReady = false;
+        this.$bvToast.toast(`Máy chủ gặp vấn đề, vui lòng thông báo admin hoặc chờ 1p rồi đăng nhập lại`, {
+          title: `Có Lỗi Xảy Ra`,
+          toaster: 'b-toaster-top-center',
+          solid: true,
+          variant: 'danger',
+          autoHideDelay: 1500,
+        })
+      }
+    }
   }
 }
 </script>

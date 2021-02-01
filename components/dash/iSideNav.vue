@@ -43,6 +43,43 @@
             href="javascript:void(0);"
           >
             <span class="icon-holder">
+              <i class="anticon anticon-picture"></i>
+            </span>
+            <span class="title">Hình Ảnh</span>
+            <span class="arrow">
+              <i class="arrow-icon"></i>
+            </span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+
+              <nuxt-link to="/hinhanh">Tất cả hình ảnh</nuxt-link>
+
+            </li>
+            <li>
+
+              <nuxt-link to="/hinhanh/anhdangcho">Ảnh đang chờ
+                <sup class="badge badge-danger">{{count_anhdangcho}}</sup>
+              </nuxt-link>
+
+            </li>
+
+            <li>
+
+              <nuxt-link to="/hinhanh/anhchuaduyet">Ảnh Cần Duyệt
+                <sup class="badge badge-danger">{{count_anhcanduyet}}</sup>
+              </nuxt-link>
+
+            </li>
+
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="dropdown-toggle"
+            href="javascript:void(0);"
+          >
+            <span class="icon-holder">
               <i class="anticon anticon-tool"></i>
             </span>
             <span class="title">Cấu Hình</span>
@@ -53,6 +90,25 @@
           <ul class="dropdown-menu">
             <li>
               <nuxt-link to="/cauhinh">Cấu Hình</nuxt-link>
+            </li>
+
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="dropdown-toggle"
+            href="javascript:void(0);"
+          >
+            <span class="icon-holder"><i class="anticon anticon-book"></i>
+            </span>
+            <span class="title">Review</span>
+            <span class="arrow">
+              <i class="arrow-icon"></i>
+            </span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <nuxt-link to="/review/">Danh Sách Review</nuxt-link>
             </li>
 
           </ul>
@@ -114,10 +170,11 @@
           </a>
           <ul class="dropdown-menu">
             <li>
-              <nuxt-link to="/nhatkitruycap/">Tài Khoản</nuxt-link>
+              <nuxt-link to="/account">User</nuxt-link>
             </li>
+
             <li>
-              <nuxt-link to="/nhatkitruycap/online">Tạo User</nuxt-link>
+              <nuxt-link to="/account/new">Tạo User</nuxt-link>
             </li>
           </ul>
         </li>
@@ -171,8 +228,30 @@
 
             </li>
           </ul>
-        </li>
 
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="dropdown-toggle"
+            href="javascript:void(0);"
+          >
+            <span class="icon-holder"><i class="anticon anticon-printer"></i>
+            </span>
+            <span class="title">Tem</span>
+            <span class="arrow">
+              <i class="arrow-icon"></i>
+            </span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+
+              <nuxt-link to="/tem/">In Tem</nuxt-link>
+
+            </li>
+
+          </ul>
+
+        </li>
       </ul>
     </div>
   </div>
@@ -180,11 +259,13 @@
 
 <script>
 export default {
-  created () {
-
-
+  data () {
+    return {
+      count_anhdangcho: 0,
+      count_anhcanduyet: 0
+    }
   },
-  mounted () {
+  async mounted () {
     //   $('.scrollable').perfectScrollbar();
     $('.side-nav .side-nav-menu li ul li').on('click', (e) => {
       const $this = $(e.currentTarget);
@@ -210,6 +291,8 @@ export default {
         });
       }
     });
+    this.count_anhcanduyet = await this.$strapi.$hopdongs.count({ reviewStatus: false });
+    this.count_anhdangcho = await this.$strapi.$hinhanhs.count({ tinhtrang: false });
   },
   methods: {
     onClickMenu () {

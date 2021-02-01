@@ -1,5 +1,6 @@
 <template>
   <div class="header">
+
     <div class="logo logo-dark">
       <nuxt-link to="/">
         <img
@@ -94,6 +95,22 @@
                   <div class="d-flex align-items-center">
                     <div class="avatar avatar-cyan avatar-icon avatar-badge avatar-square ">
                       <i class="anticon anticon-mail"></i>
+                      <span class="badge badge-indicator badge-danger">{{getCountHopDongDangCho}}</span>
+                    </div>
+
+                    <div class="m-l-15">
+                      <p class="m-b-0 text-dark">Hợp Đồng Đang Chờ</p>
+
+                    </div>
+                  </div>
+                </nuxt-link>
+                <nuxt-link
+                  to="/thongbao/moi"
+                  class="dropdown-item d-block p-15 border-bottom"
+                >
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-cyan avatar-icon avatar-badge avatar-square ">
+                      <i class="anticon anticon-mail"></i>
                       <span class="badge badge-indicator badge-danger">{{getCountHopDongMoi}}</span>
                     </div>
 
@@ -179,21 +196,16 @@
             class="pointer"
             data-toggle="dropdown"
           >
-            <div class="avatar avatar-image  m-h-10 m-r-15">
-              <img
-                :src="info.Avatar.formats.thumbnail.url"
-                alt=""
-              >
+            <div class="avatar avatar-text avatar-magenta m-h-10 m-r-15">
+              {{info.username[0].toUpperCase()}}
             </div>
+
           </div>
           <div class="p-b-15 p-t-20 dropdown-menu pop-profile">
             <div class="p-h-20 p-b-15 m-b-10 border-bottom">
               <div class="d-flex m-r-50">
-                <div class="avatar avatar-lg avatar-image">
-                  <img
-                    :src="info.Avatar.formats.thumbnail.url"
-                    alt=""
-                  >
+                <div class="avatar avatar-lg avatar-magenta ">
+                  {{info.username[0].toUpperCase()}}
                 </div>
                 <div class="m-l-10">
                   <p class="m-b-0 text-dark font-weight-semibold">{{info.RealName}}</p>
@@ -249,6 +261,7 @@
 export default {
   data () {
     return {
+      hopdongdangcho: 0,
       info: {},
       show: false,
       fullSreen: false,
@@ -306,10 +319,15 @@ export default {
         }
       })
       return count;
+    },
+    getCountHopDongDangCho () {
+      return this.hopdongdangcho
     }
   },
   async fetch () {
     this.noti = await this.$strapi.$notifications.find({ see: false });
+    this.hopdongdangcho = await this.$strapi.$hinhanhs.count({ tinhtrang: false })
+
   },
   beforeMount () {
 
@@ -328,9 +346,6 @@ export default {
       this.$cookies.remove('info');
       this.$cookies.remove('login');
       //logout strapi 
-      let uri = 'https://api.ipify.org'
-      let myip = await fetch(uri);
-      let ip = await myip.text()
 
       let d = {
         type: 'DANGXUAT',

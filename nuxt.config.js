@@ -32,7 +32,7 @@ export default {
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
-
+    '~/plugins/vue-confirm.js'
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -40,18 +40,19 @@ export default {
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
-    '@nuxtjs/moment',
+    '@nuxtjs/moment'
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
-    '@nuxtjs/strapi'
+    '@nuxtjs/strapi',
+    '@nuxtjs/axios'
   ],
   strapi: {
-    // url: 'http://localhost:3001',
-    url: 'https://iadminstrapi.herokuapp.com',
+    url: 'http://localhost:3001',
+    //url: 'https://iadminstrapi.herokuapp.com',
     entities: [
       'accounts',
       'hopdongs',
@@ -66,7 +67,10 @@ export default {
       'chungtus',
       'notifications',
       'cauhinh',
-      'tienquy'
+      'tienquy',
+      'decalcamdos',
+      'hinhanhs',
+      'reviews'
 
     ]
   },

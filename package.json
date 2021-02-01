@@ -9,6 +9,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.12.3",
     "@nuxtjs/moment": "^1.6.1",
     "@nuxtjs/strapi": "^0.1.8",
     "bootstrap": "^4.5.2",
@@ -21,7 +22,8 @@
     "lodash": "^4.17.20",
     "nuxt": "^2.14.6",
     "qs": "^6.9.4",
-    "vue-chartjs": "^3.5.1"
+    "vue-chartjs": "^3.5.1",
+    "vuejs-dialog": "^1.4.2"
   },
   "devDependencies": {}
 }

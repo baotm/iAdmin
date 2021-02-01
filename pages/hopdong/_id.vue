@@ -403,7 +403,7 @@
                               >Chuộc</button>
                               <button
                                 class="btn btn-danger btn-tone m-r-5"
-                                @click="chuocHopDong"
+                                @click="xoaHopDong"
                               >Xóa Hợp Đồng</button>
                             </center>
                           </li>
@@ -918,6 +918,10 @@ export default {
       this.$router.push('/hopdong')
     },
     chuocHopDong () {
+      this.show = true;
+      this.messageCreate = "Bạn Phải Chịu Trách Nhiệm CHo Hành Động Này"
+    },
+    xoaHopDong () {
       this.show = true;
       this.messageCreate = "Bạn Phải Chịu Trách Nhiệm CHo Hành Động Này"
     },

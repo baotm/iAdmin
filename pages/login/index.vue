@@ -112,8 +112,8 @@ export default {
 
   data () {
     return {
-      username: 'bao',
-      password: '123',
+      username: '',
+      password: '',
       show: false
     }
   },
@@ -131,6 +131,7 @@ export default {
 
     async checkLogin () {
 
+
       this.show = true;
       if (this.username.length == 0 || this.username.length == 0) {
         this.$bvToast.toast(`Vui lòng không để trống tên đăng nhập và tài khoản`, {
@@ -146,50 +147,37 @@ export default {
 
       //check listlogin
 
-      let info = await this.$strapi.$accounts.find({
-        username: this.username,
-        password: this.password
-      })
-      if (info.length > 0) {
-        //login to strapi
-        //login true
-        //let my ip
-        //check is login
-
-
-
-        //  await this.$strapi.$nhatkitruycaps.create(d)
-        //set cookies here
-        let optionCookies = {
-          path: '/',
-          expires: 0
+      try {
+        let info = await this.$strapi.$accounts.find({
+          username: this.username,
+          password: this.password
+        })
+        if (info.length > 0) {
+          let optionCookies = {
+            path: '/',
+            expires: 0
+          }
+          this.$cookies.set('login', true, optionCookies)
+          this.$cookies.set('info', info[0], optionCookies)
+          location.replace('/')
+        } else {
+          //login false
+          this.show = false;
+          this.username = '';
+          this.$bvToast.toast(`Vui lòng kiểm tra tên đăng nhập và tài khoản`, {
+            title: `Có Lỗi Xảy Ra`,
+            toaster: 'b-toaster-top-center',
+            solid: true,
+            variant: 'danger',
+            autoHideDelay: 1500,
+          })
         }
-        this.$cookies.set('login', true, optionCookies)
-        this.$cookies.set('info', info[0], optionCookies)
-
-        //set user online
-
-        let acc = {
-          "name": info[0].RealName,
-          "role": info[0].Role,
-          "avatar": info[0].Avatar.url,
-          "email": info[0].Email,
-          "phone": info[0].Phone,
-          "account_id": info[0]._id
-        }
-
-        //  let loginSession = await this.$strapi.$listuseronlines.create(acc)
-        let [nktc, LoginSession] = await Promise.all([
-        
-        
-        ])
-        this.$cookies.set('loginSession', LoginSession._id, optionCookies)
-        location.replace('/')
-      } else {
-        //login false
+      } catch (e) {
+        console.log(e)
+        console.log('error')
         this.show = false;
         this.username = '';
-        this.$bvToast.toast(`Vui lòng kiểm tra tên đăng nhập và tài khoản`, {
+        this.$bvToast.toast(`Máy chủ gặp vấn đề, vui lòng thông báo admin hoặc chờ 1p rồi đăng nhập lại`, {
           title: `Có Lỗi Xảy Ra`,
           toaster: 'b-toaster-top-center',
           solid: true,
@@ -197,6 +185,7 @@ export default {
           autoHideDelay: 1500,
         })
       }
+
     }
   }
 }

@@ -53,24 +53,22 @@
             <b-row>
               <b-col
                 class="my-1"
-                lg="6"
+                lg="3"
               >
                 <b-form-group label="Tìm Kiếm Theo Tên">
                   <b-input-group>
                     <b-form-input
                       type="search"
                       id="filterInput"
-                      placeholder="Type to Search"
+                      placeholder="tìm ..."
                       v-model="filter"
                       autocomplete="off"
                     ></b-form-input>
-                    <b-input-group-append>
-                      <b-button>Clear</b-button>
-                    </b-input-group-append>
+
                   </b-input-group>
                 </b-form-group>
               </b-col>
-              <b-col lg="6">
+              <b-col lg="4">
                 <b-form-group
                   label="Tìm trong"
                   description="Bỏ trống sẽ kích hoạt tìm tất cả các thông tin"
@@ -80,23 +78,72 @@
                     v-model="filterOn"
                     class="mt-1"
                   >
-                    <b-form-checkbox value="Account">Tên</b-form-checkbox>
-                    <b-form-checkbox value="Type">Kiểu Truy Cập</b-form-checkbox>
-                    <b-form-checkbox value="I">Địa Chỉ IP</b-form-checkbox>
+                    <b-form-checkbox value="tenkhach">Tên</b-form-checkbox>
+                    <b-form-checkbox value="maso">Mã số</b-form-checkbox>
+                    <b-form-checkbox value="sotien">Số tiền</b-form-checkbox>
+                    <b-form-checkbox value="tienno">Tiền nợ</b-form-checkbox>
+
                   </b-form-checkbox-group>
                 </b-form-group>
               </b-col>
-            </b-row>
+              <b-col
+                class="my-1"
+                lg="2"
+              >
+                <b-form-group label="Loại Hàng Hiển thị">
 
+                  <b-form-checkbox-group
+                    v-model="show_loaitaisan"
+                    class="mt-1"
+                  >
+                    <b-form-checkbox value="vang">Vàng</b-form-checkbox>
+                    <b-form-checkbox value="xe">Xe</b-form-checkbox>
+
+                  </b-form-checkbox-group>
+                </b-form-group>
+
+              </b-col>
+              <b-col
+                class="my-1"
+                lg="3"
+              >
+                <b-form-group label="Tình Trạng">
+
+                  <b-form-checkbox-group
+                    v-model="show_tinhtrang"
+                    class="mt-1"
+                  >
+                    <b-form-checkbox value="dachuoc">Đã chuộc</b-form-checkbox>
+                    <b-form-checkbox value="chuachuoc">Chưa Chuộc</b-form-checkbox>
+
+                  </b-form-checkbox-group>
+                </b-form-group>
+
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col
+                class="my-1"
+                lg="12"
+              >
+
+              </b-col>
+
+            </b-row>
             <b-table
               show-empty
               :fields="fields"
               borderless
               outlined
+              empty-text="Không có hợp đồng nào..."
+              empty-filtered-text="Không có kết quả..."
               fixed
               table-variant
               hover
-              :items="hopdongs"
+              filterOn:
+              :filter-included-fields="filterOn"
+              :filter="filter"
+              :items="listhopdong"
               :per-page="perPage"
               :current-page="currentPage"
               :busy="isBusy"
@@ -234,9 +281,10 @@ export default {
       dataReady: false,
       showPage: false,
       isBusy: true,
+
       //filter
       filter: null,
-      filterOn: [],
+      filterOn: null,
       //paging
       currentPage: 1,
       perPage: 10,
@@ -253,7 +301,10 @@ export default {
 
 
       ],
-      hopdongs: []
+      filterOn: [],
+      hopdongs: [],
+      show_loaitaisan: ['vang', 'xe'],
+      show_tinhtrang: ['chuachuoc', 'dachuoc']
     }
   },
   async fetch () {
@@ -275,7 +326,40 @@ export default {
     }
   },
   computed: {
+    listhopdong () {
+      var filter = {
+        loaitaisan: this.show_loaitaisan,
+        tinhtrang: this.show_tinhtrang,
+      };
+      let items;
+      items = this.hopdongs.filter((item) => {
+        for (let i = 0; i < filter.loaitaisan.length; i++) {
+          if (item.loaitaisan.toUpperCase() == filter.loaitaisan[i].toUpperCase()) {
+            return true;
+          }
 
+        }
+      })
+
+      items = items.filter((item) => {
+
+        for (let i = 0; i < filter.tinhtrang.length; i++) {
+          if (item.tinhtrang.toUpperCase() == filter.tinhtrang[i].toUpperCase()) {
+            return true;
+          }
+
+        }
+      })
+
+      console.log(items)
+
+      return items;
+    }
+  },
+  watch: {
+    show_loaitaisan () {
+      //change item
+    }
   }
 }
 </script>
