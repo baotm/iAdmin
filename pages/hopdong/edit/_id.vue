@@ -64,9 +64,9 @@
                     >
                       <b-form-input
                         disabled
+                        :style="errorStyle('loaitaisan')"
                         v-model="form.loaitaisan"
                       >
-
                       </b-form-input>
 
                       <b-form-invalid-feedback>
@@ -85,6 +85,7 @@
                         autocomplete="off"
                         v-model="form.SoDienThoai"
                         class="form-control"
+                        :style="errorStyle('sodienthoai')"
                         required
                       ></b-form-input>
                     </b-form-group>
@@ -94,6 +95,7 @@
                       class="col-3"
                     >
                       <b-form-input
+                        :style="errorStyle('maso')"
                         v-model="form.maso"
                         class="form-control"
                         disabled
@@ -105,6 +107,7 @@
                       class="col-4"
                     >
                       <b-input
+                        :style="errorStyle('tenkhach')"
                         v-model="form.TenNguoiCam"
                         autocomplete="off"
                         required
@@ -122,6 +125,7 @@
                       class="col-4"
                     >
                       <b-input
+                        :style="errorStyle('diachi')"
                         v-model="form.diachi"
                         autocomplete="off"
                         required
@@ -141,6 +145,7 @@
                       class="col-4"
                     >
                       <b-input
+                        :style="errorStyle('sotien')"
                         v-model="form.SoTien"
                         :state="sotienState"
                         autocomplete="off"
@@ -159,6 +164,7 @@
                       class="col-6"
                     >
                       <b-form-datepicker
+                        :style="errorStyle('ngaythe')"
                         v-model="form.NgayCam"
                         required
                       ></b-form-datepicker>
@@ -170,6 +176,7 @@
                       class="col-3"
                     >
                       <b-form-input
+                        :style="errorStyle('thoihancam')"
                         required
                         type="number"
                         v-model="form.ThoiHanCam"
@@ -192,6 +199,7 @@
                     >
 
                       <b-form-input
+                        :style="errorStyle('laixuat')"
                         v-model="form.laixuat"
                         required
                       >
@@ -229,6 +237,7 @@
                       class="col-4"
                     >
                       <b-input
+                        :style="errorStyle('tienno')"
                         v-model="form.tienno"
                         required
                         class="form-control"
@@ -265,6 +274,7 @@
                       label="Thông Tin Món Đồ"
                     >
                       <b-form-textarea
+                        :style="errorStyle('thongtinmondo')"
                         autocomplete="off"
                         v-model="form.ThongTinTaiSan"
                         placeholder="Enter something..."
@@ -447,8 +457,20 @@
 <script>
 export default {
   methods: {
+    errorStyle (element) {
 
+      let e = JSON.parse(this.$route.query.fields)
+
+      if (e.includes(element)) {
+        return {
+          'border-width': '2px',
+          'borderColor': 'red'
+        }
+      }
+
+    },
     makeToast (mes) {
+      console.log(mes)
       if (mes != "" && mes != undefined) {
         this.$bvToast.toast(`Lỗi sai :` + mes, {
           title: 'Thông tin',
@@ -457,7 +479,10 @@ export default {
           variant: 'warning',
           toaster: 'b-toaster-top-center'
         })
+        //fields
+
       }
+
 
     },
 

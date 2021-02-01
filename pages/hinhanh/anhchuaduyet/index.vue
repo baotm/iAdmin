@@ -110,9 +110,12 @@
                               </p>
                               <div> <label>Thông tin ghi chú:</label>
                                 <b-form-textarea
-                                  v-if="forsure"
-                                  placeholder="..."
+                                  v-show="forsure"
+                                  placeholder="Lỗi sai ở đây"
                                   v-model="ghichu"
+                                  rows="8"
+                                  ref="ghichu"
+                                  :style="ghichuStyle"
                                 ></b-form-textarea>
 
                               </div>
@@ -155,7 +158,11 @@ export default {
   data () {
     return {
       ghichu: '',
+      ghichuStyle: {
+
+      },
       selected: ['maso', 'tenkhach', 'loaitaisan', 'sotien', 'thongtinmondo', 'ngaythe', 'laixuat', 'tienno', 'sodienthoai', 'kholuu', 'diachi', 'thoihancam'],
+      unselected: [],
       dataReady: false,
       sortType: 'DESC',
       hopdongs: [],
@@ -171,9 +178,24 @@ export default {
     this.dataReady = true;
 
   },
-  methods: {
-    setScore () {
+  watch: {
+    selected () {
+      let listOriginal = ['maso', 'tenkhach', 'loaitaisan', 'sotien', 'thongtinmondo', 'ngaythe', 'laixuat', 'tienno', 'sodienthoai', 'kholuu', 'diachi', 'thoihancam']
+      let listSelected = this.selected;
+      this.unselected = listOriginal.filter(x => {
+        if (listSelected.includes(x)) {
+          return false
+        } else {
+          return true
+        }
+      });
 
+
+    }
+  },
+  methods: {
+
+    setScore () {
       this.score = this.selected.length
     },
     hoantat () {
@@ -196,6 +218,7 @@ export default {
           ghichu: this.ghichu,
           hinhanhid: this.hopdongs[0].hinhanhid,
           hopdongid: this.hopdongs[0]._id,
+
         }
         await this.$strapi.$reviews.create(review);
         mess.body = "Update thông tin hợp đồng"
@@ -234,16 +257,24 @@ export default {
             ghichu: this.ghichu,
             hinhanhid: this.hopdongs[0].hinhanhid,
             hopdongid: this.hopdongs[0]._id,
+
+            vitrisai: {
+              "fields": JSON.stringify(this.unselected)
+            }
           }
+          await this.$strapi.$hopdongs.update(this.hopdongs[0]._id, { reviewStatus: true })
           await this.$strapi.$reviews.create(review)
           mess.body = 'done.'
           this.dataReady = true;
-          window.location.replace('/hopdong/edit/' + this.hopdongs[0]._id + "?msg=" + this.ghichu)
+          window.location.replace('/hopdong/edit/' + this.hopdongs[0]._id + "?msg=" + this.ghichu + "&fields=" + JSON.stringify(this.unselected))
 
         })
       } else {
         this.$dialog.confirm(mess, opts).then(() => {
           this.forsure = true;
+          this.ghichuStyle = {
+            'borderColor': 'red'
+          }
           this.dataReady = true;
         })
       }
