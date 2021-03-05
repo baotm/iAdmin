@@ -287,7 +287,7 @@ export default {
       filterOn: null,
       //paging
       currentPage: 1,
-      perPage: 10,
+      perPage: 20,
       totalItems: 0,
       fields: [
         { key: 'Stt', label: '#' },

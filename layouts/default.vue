@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="app is-primary">
     <div class="layout">
       <myHeader />
       <mySideNav />

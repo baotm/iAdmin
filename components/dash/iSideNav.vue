@@ -1,8 +1,14 @@
 <template>
   <div class="side-nav">
-    <div class="side-nav-inner">
+    <div
+      class="side-nav-inner"
+      id="nav_bar"
+    >
       <ul class="side-nav-menu scrollable">
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          id="menu_home"
+        >
           <nuxt-link to="/">
             <span class="icon-holder">
               <i class="anticon anticon-dashboard"></i>
@@ -10,7 +16,10 @@
             <span class="title">Home</span>
           </nuxt-link>
         </li>
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          id="menu_hopdong"
+        >
           <a
             class="dropdown-toggle"
             href="javascript:void(0);"
@@ -37,7 +46,10 @@
 
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          id="menu_hinhanh"
+        >
           <a
             class="dropdown-toggle"
             href="javascript:void(0);"
@@ -74,7 +86,10 @@
 
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          id="menu_cauhinh"
+        >
           <a
             class="dropdown-toggle"
             href="javascript:void(0);"
@@ -94,7 +109,10 @@
 
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          id="menu_review"
+        >
           <a
             class="dropdown-toggle"
             href="javascript:void(0);"
@@ -113,7 +131,10 @@
 
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          id="menu_chungtu"
+        >
           <a
             class="dropdown-toggle"
             href="javascript:void(0);"
@@ -132,7 +153,10 @@
 
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          id="menu_thongbao"
+        >
           <a
             class="dropdown-toggle"
             href="javascript:void(0);"
@@ -156,7 +180,10 @@
             </li>
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          id="menu_taikhoan"
+        >
           <a
             class="dropdown-toggle"
             href="javascript:void(0);"
@@ -179,7 +206,10 @@
           </ul>
         </li>
 
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          id="menu_thanhly"
+        >
           <a
             class="dropdown-toggle"
             href="javascript:void(0);"
@@ -204,7 +234,10 @@
             </li>
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          id="menu_thongke"
+        >
           <a
             class="dropdown-toggle"
             href="javascript:void(0);"
@@ -230,7 +263,10 @@
           </ul>
 
         </li>
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          id="menu_tem"
+        >
           <a
             class="dropdown-toggle"
             href="javascript:void(0);"
@@ -262,11 +298,15 @@ export default {
   data () {
     return {
       count_anhdangcho: 0,
-      count_anhcanduyet: 0
+      count_anhcanduyet: 0,
+      view: {
+        admin: [],
+        sale: ['menu_home', 'menu_hopdong', 'menu_hinhanh', 'menu_review', 'menu_chungtu', 'menu_tem']
+      },
+
     }
   },
   async mounted () {
-    //   $('.scrollable').perfectScrollbar();
     $('.side-nav .side-nav-menu li ul li').on('click', (e) => {
       const $this = $(e.currentTarget);
       $('.side-nav .side-nav-menu li ul li').removeClass('active')
@@ -293,12 +333,40 @@ export default {
     });
     this.count_anhcanduyet = await this.$strapi.$hopdongs.count({ reviewStatus: false });
     this.count_anhdangcho = await this.$strapi.$hinhanhs.count({ tinhtrang: false });
+    //set permission
+    let rolenow = (this.$cookies.get('info').Role).toLowerCase();
+
+    if (rolenow != 'admin') {
+      this.setViewPermission(this.view[rolenow])
+
+    }
+
   },
   methods: {
     onClickMenu () {
       const isFolded = 'is-folded';
       const appLayout = $('.app');
       appLayout.toggleClass(isFolded)
+    },
+    setViewPermission (permission) {
+
+      let listDiv = $(".nav-item").get();
+      let fullListNav = []
+      listDiv.forEach(i => {
+        fullListNav.push($(i).attr('id'))
+      })
+
+      let listHide = fullListNav.filter(x => {
+        if (permission.includes(x)) {
+          return false
+        } else {
+          return true
+        }
+      }
+      );
+      listHide.forEach(e => {
+        $("#" + e).hide()
+      });
     }
   }
 }

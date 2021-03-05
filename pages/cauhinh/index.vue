@@ -414,10 +414,7 @@
                               <div class="row">
                                 <div class="col-6">
                                   <b-form-group label="Tên Hiển Thị Sản">
-                                    <b-input
-                                      required
-                                      v-model="cauhinh.kho.vang.display"
-                                    ></b-input>
+                                    <b-input required></b-input>
                                   </b-form-group>
                                   <b-form-group label="Tên Tài Sản">
                                     <b-input
@@ -477,7 +474,7 @@
                                                 </b-col>
                                                 <b-col cols="7">
                                                   <b-form-group label="Hiển Thị :">
-                                                    <b-input :value="item.display"></b-input>
+                                                    <!-- <b-input :value="item.display"></b-input> -->
                                                   </b-form-group>
                                                 </b-col>
                                               </b-row>
